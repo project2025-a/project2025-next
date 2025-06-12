@@ -46,24 +46,35 @@
 ## 📂 Folder Structure
 
 ```
-📦 src
- ┣ 📂 assets       # 정적 파일 (이미지, 아이콘 등)
- ┣ 📂 components   # 공용 컴포넌트 (Icons, UI 등)
- ┣ 📂 constants    # 상수값 정의
- ┣ 📂 contexts     # React Context API 전역 상태 관리
- ┣ 📂 features     # 기능별 컴포넌트
- ┣ 📂 hooks        # 커스텀 훅
- ┃ ┣ 📂 mutations   # useMutation 관련 훅
- ┃ ┣ 📂 queries     # useQuery 관련 훅
- ┣ 📂 layouts      # 페이지 레이아웃 컴포넌트
- ┣ 📂 pages        # 페이지 컴포넌트 (각 페이지 전용 하위 컴포넌트 포함)
- ┣ 📂 routes       # 라우팅 관련 설정 (Protected Route 등)
- ┣ 📂 services     # API 호출 및 데이터 처리
- ┃ ┣ 📂 apis       # Axios 인스턴스 및 API 요청
- ┃ ┣ 📂 schemas    # Zod 유효성 검사 스키마
- ┣ 📂 store        # 클라이언트 상태 저장소 (Zustand)
- ┣ 📂 types        # 글로벌 타입 정의
- ┣ 📂 utils        # 유틸리티 함수
+📦src
+ ┣ 📂app                     # Next.js 15 App Router 구조
+ ┃ ┣ 📂(root)               # 홈, 로그인, 프로필 등 메인 페이지
+ ┃ ┣ 📂(write)              # 로그 등록 및 수정 페이지
+ ┃ ┣ 📂(no-header-footer)   # 약관, 공지 등 header/footer 없는 페이지
+ ┃ ┣ 📂actions              # 서버 액션 (Server Actions)
+ ┃ ┣ 📂api                  # API 라우트 핸들러 (Route Handlers)
+ ┃ ┣ 📂assets               # 폰트, 이미지 등 정적 리소스
+ ┃ ┗ 📜layout.tsx          # 앱 전체 레이아웃
+
+┣ 📂components              # UI 공통 컴포넌트
+ ┃ ┣ 📂common              # 버튼, 카드, 헤더, 모달 등
+ ┃ ┣ 📂features            # 페이지 단위 컴포넌트 모음
+ ┃ ┗ 📂ui                  # Shadcn 기반 UI 컴포넌트 래퍼
+
+┣ 📂constants               # 상수 데이터 (도시 목록, 태그 등)
+┣ 📂hooks                   # React 커스텀 훅
+ ┃ ┣ 📂mutations
+ ┃ ┣ 📂queries
+ ┃ ┗ 📜...
+
+┣ 📂lib                     # Supabase 클라이언트, 유틸, Zod 스키마 등
+┣ 📂providers               # React Provider 설정 (QueryClient 등)
+┣ 📂stores                  # Zustand 기반 글로벌 상태 관리
+┣ 📂styles                  # 글로벌 스타일 (Tailwind 포함)
+┣ 📂types                   # 타입 정의 (API, 스키마 등)
+┣ 📂utils                   # 유틸 함수 모음
+┗ 📜middleware.ts          # 미들웨어 설정
+
 ```
 
 </br>
