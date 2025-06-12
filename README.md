@@ -24,12 +24,13 @@
 
 | Service          | Desktop | Mobile |
 |-----------------|---------|--------|
-| **로그 조회**  | ![Desktop](https://github.com/user-attachments/assets/c30475eb-a3b5-49f9-8a1e-d8de772ad171) | ![Mobile](https://github.com/user-attachments/assets/fe3ab2b0-9f26-4af7-89ef-90ba1ad816c8) |
-| **검색**        | ![Desktop](https://github.com/user-attachments/assets/21e554d6-091e-4a41-bf08-82fe5e6c896a) | ![Mobile](https://github.com/user-attachments/assets/7e692e57-bf7b-42a3-bd89-e1f6486ce8a7) |
-| **상세 페이지** | ![Desktop](https://github.com/user-attachments/assets/d3a86dee-b6b2-4c49-83e3-93db3bc226be) | ⏳ |
-| **로그 등록**  | ![Desktop](https://github.com/user-attachments/assets/c4a34b0a-39c6-4f46-993d-6e01aa18efbe) | ⏳ |
+| **로그 조회**  | ![Image](https://github.com/user-attachments/assets/49a60ab8-4763-4d80-aac0-6d9b94813dff) | ![Image](https://github.com/user-attachments/assets/193705da-7199-4b77-b4ad-ee70ec85b776) |
+| **검색**        | ![Image](https://github.com/user-attachments/assets/b146f609-2de1-4c65-b8ca-053dff6cb23b) | ![Image](https://github.com/user-attachments/assets/2a673aa5-7d06-4461-8469-a767068ff63c) |
+| **상세 페이지** | ![Image](https://github.com/user-attachments/assets/c631f3fa-2a1b-48c9-bf29-be1dd3900101) | ![Image](https://github.com/user-attachments/assets/5acccca9-7c00-4352-aedf-ed5b0fc487e8) |
+| **로그 등록**  | ![Image](https://github.com/user-attachments/assets/ce700e70-ea4b-44ae-ad0f-acfd20c05874) | ![Image](https://github.com/user-attachments/assets/45e34b7f-4ecf-47ce-a63d-d16f8d128fcc) |
 | **로그 수정**  | ![Desktop](https://github.com/user-attachments/assets/6c86cfea-c45d-42b2-9a6a-81737f262e8a) | ⏳ |
-| **마이페이지** | ⏳ | ⏳ |
+| **마이페이지** | ![Image](https://github.com/user-attachments/assets/d7e8b0c1-dc5d-423d-af15-131b754b6912) | ![Image](https://github.com/user-attachments/assets/c1266e57-fdc1-4463-9d02-2c58404148fc) |
+| **유저 수정** | ![Image](https://github.com/user-attachments/assets/823b019f-37c5-4b64-9280-e30bbc128472) | ![Image](https://github.com/user-attachments/assets/32183a84-c4f6-4ef7-8464-53d9c8525a9e) |
 
 </br>
 
