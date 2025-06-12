@@ -36,11 +36,10 @@
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React, TailwindCSS, Shadcn
-- **State Management**: Zustand, Tanstack Query, React Hook Form, Zod
-- **Backend**: Java, Spring Boot
-- **Database**: AWS RDS
-- **Map Service**: Kakao Maps API
+- **Frontend**:Next.js 15, Tailwind CSS v4, Shadcn UI
+- **State/Form**: Zustand, TanStack Query v5, React Hook Form + Zod
+- **Backend 연동**: Supabase (Auth, Storage), Prisma
+- **Mock / 테스트**: MSW (Mock Service Worker)
 
 </br>
 
@@ -71,20 +70,24 @@
 
 ## 🚀 Getting Started
 
-```bash
-# 1. 프로젝트 클론
-git clone https://github.com/your-repo/spoteditor.git
 
-# 2. 의존성 설치
-cd spoteditor
-yarn install
+### 1. 프로젝트 클론
+git clone https://github.com/project2025-a/project2025-next.git
 
-# 3. 환경 변수 설정 (.env 파일 생성 후 아래 값 입력)
-VITE_API_BASE_URL='백엔드 API 경로'
-VITE_KAKAO_LOGIN_URL='카카오 로그인 URL'
-VITE_KAKAO_MAP_KEY='카카오 맵 API 키'
-VITE_CLOUDE_FRONT='AWS CloudFront URL'
+### 2. 의존성 설치
+npm install
 
-# 4. 로컬 서버 실행
+### 3. 환경 변수 설정 (.env 파일 생성 후 아래 값 입력)
+#### Supabase 설정
+NEXT_PUBLIC_SUPABASE_URL=Supabase 프로젝트 URL  
+NEXT_PUBLIC_SUPABASE_ANON_KEY=Supabase 공개 키
+
+#### Prisma 설정 (Supabase DB 접속용)
+DATABASE_URL=Prisma가 사용할 Supabase DB 연결 URL  
+DIRECT_URL=Prisma Studio나 마이그레이션용 직접 접속 URL  
+
+#### 로컬 개발용 사이트 주소
+NEXT_PUBLIC_SITE_URL_LOCAL=로컬 개발 중 사용할 사이트 주소 (예: http://localhost:3000)
+
+### 4. 로컬 서버 실행
 yarn start
-```
