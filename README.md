@@ -18,22 +18,6 @@
 3. **커뮤니티 기능**: 북마크 및 팔로우 기능을 통해 관심 있는 유저, 장소, 로그를 마이페이지에서 간편하게 관리할 수 있습니다.
 4. **반응형 디자인**: 데스크탑과 모바일에서 최적화된 UI/UX를 제공합니다.
 
-</br>
-
-## 🖥️ Demo
-
-| Service          | Desktop | Mobile |
-|-----------------|---------|--------|
-| **로그 조회**  | ![Image](https://github.com/user-attachments/assets/49a60ab8-4763-4d80-aac0-6d9b94813dff) | ![Image](https://github.com/user-attachments/assets/193705da-7199-4b77-b4ad-ee70ec85b776) |
-| **검색**        | ![Image](https://github.com/user-attachments/assets/b146f609-2de1-4c65-b8ca-053dff6cb23b) | ![Image](https://github.com/user-attachments/assets/2a673aa5-7d06-4461-8469-a767068ff63c) |
-| **상세 페이지** | ![Image](https://github.com/user-attachments/assets/c631f3fa-2a1b-48c9-bf29-be1dd3900101) | ![Image](https://github.com/user-attachments/assets/5acccca9-7c00-4352-aedf-ed5b0fc487e8) |
-| **로그 등록**  | ![Image](https://github.com/user-attachments/assets/ce700e70-ea4b-44ae-ad0f-acfd20c05874) | ![Image](https://github.com/user-attachments/assets/45e34b7f-4ecf-47ce-a63d-d16f8d128fcc) |
-| **로그 수정**  | ![Desktop](https://github.com/user-attachments/assets/6c86cfea-c45d-42b2-9a6a-81737f262e8a) | ⏳ |
-| **마이페이지** | ![Image](https://github.com/user-attachments/assets/d7e8b0c1-dc5d-423d-af15-131b754b6912) | ![Image](https://github.com/user-attachments/assets/c1266e57-fdc1-4463-9d02-2c58404148fc) |
-| **유저 수정** | ![Image](https://github.com/user-attachments/assets/823b019f-37c5-4b64-9280-e30bbc128472) | ![Image](https://github.com/user-attachments/assets/32183a84-c4f6-4ef7-8464-53d9c8525a9e) |
-
-</br>
-
 ## 🛠️ Tech Stack
 
 <table>
@@ -132,3 +116,25 @@ NEXT_PUBLIC_SITE_URL_LOCAL=로컬 개발 중 사용할 사이트 주소 (예: ht
 
 ### 4. 로컬 서버 실행
 yarn start
+
+## Intro
+
+<img width="878" alt="Image" src="https://github.com/user-attachments/assets/c7688aec-5b5a-4f0e-8203-361336b50787" />
+<img width="878" alt="Image" src="https://github.com/user-attachments/assets/33161091-11e9-4270-ae75-1b7f21b57f64" />
+<img width="878" alt="Image" src="https://github.com/user-attachments/assets/eb6d59bd-fb87-4cae-88de-14c7316977a3" />
+<img width="878" alt="Image" src="https://github.com/user-attachments/assets/f7107d7c-f4e4-4b3a-8008-8bcc7d521348" />
+<img width="878" alt="Image" src="https://github.com/user-attachments/assets/a563518a-6d82-4867-a8fb-ca8b254380dd" />
+<img width="878" alt="Image" src="https://github.com/user-attachments/assets/bf1dbe7e-5510-4006-9b96-7e757b64df7a" />
+
+## 🖥️ Demo
+
+| Service          | Desktop | Mobile |
+|-----------------|---------|--------|
+| **로그 조회**  | ![Image](https://github.com/user-attachments/assets/49a60ab8-4763-4d80-aac0-6d9b94813dff) | ![Image](https://github.com/user-attachments/assets/193705da-7199-4b77-b4ad-ee70ec85b776) |
+| **검색**        | ![Image](https://github.com/user-attachments/assets/b146f609-2de1-4c65-b8ca-053dff6cb23b) | ![Image](https://github.com/user-attachments/assets/2a673aa5-7d06-4461-8469-a767068ff63c) |
+| **상세 페이지** | ![Image](https://github.com/user-attachments/assets/c631f3fa-2a1b-48c9-bf29-be1dd3900101) | ![Image](https://github.com/user-attachments/assets/5acccca9-7c00-4352-aedf-ed5b0fc487e8) |
+| **로그 등록**  | ![Image](https://github.com/user-attachments/assets/ce700e70-ea4b-44ae-ad0f-acfd20c05874) | ![Image](https://github.com/user-attachments/assets/45e34b7f-4ecf-47ce-a63d-d16f8d128fcc) |
+| **로그 수정**  | ![Desktop](https://github.com/user-attachments/assets/6c86cfea-c45d-42b2-9a6a-81737f262e8a) | ⏳ |
+| **마이페이지** | ![Image](https://github.com/user-attachments/assets/d7e8b0c1-dc5d-423d-af15-131b754b6912) | ![Image](https://github.com/user-attachments/assets/c1266e57-fdc1-4463-9d02-2c58404148fc) |
+| **유저 수정** | ![Image](https://github.com/user-attachments/assets/32183a84-c4f6-4ef7-8464-53d9c8525a9e) | ![Image](https://github.com/user-attachments/assets/823b019f-37c5-4b64-9280-e30bbc128472) |
+
