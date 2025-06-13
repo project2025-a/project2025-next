@@ -36,10 +36,40 @@
 
 ## 🛠️ Tech Stack
 
-- **Frontend**:Next.js 15, Tailwind CSS v4, Shadcn UI
-- **State/Form**: Zustand, TanStack Query v5, React Hook Form + Zod
-- **Backend 연동**: Supabase (Auth, Storage), Prisma
-- **Mock / 테스트**: MSW (Mock Service Worker)
+<table>
+  <tr>
+    <td><strong>Frontend</strong></td>
+    <td>
+      <img src="https://img.shields.io/badge/Next.js-000000?logo=next.js&logoColor=white" />
+      <img src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?logo=tailwindcss&logoColor=white" />
+      <img src="https://img.shields.io/badge/Shadcn_UI-%23EDEDED?logo=storybook&logoColor=black" />
+    </td>
+  </tr>
+  <tr>
+    <td><strong>State / Form</strong></td>
+    <td>
+      <img src="https://img.shields.io/badge/Zustand-000000?logo=zotero&logoColor=white" />
+      <img src="https://img.shields.io/badge/TanStack_Query-FF4154?logo=react-query&logoColor=white" />
+      <img src="https://img.shields.io/badge/React_Hook_Form-EC5990?logo=reacthookform&logoColor=white" />
+      <img src="https://img.shields.io/badge/Zod-3E52B5?logo=graphql&logoColor=white" />
+    </td>
+  </tr>
+  <tr>
+    <td><strong>Backend 연동</strong></td>
+    <td>
+      <img src="https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase&logoColor=white" />
+      <img src="https://img.shields.io/badge/Prisma-2D3748?logo=prisma&logoColor=white" />
+    </td>
+  </tr>
+  <tr>
+    <td><strong>Mock / 테스트</strong></td>
+    <td>
+      <img src="https://img.shields.io/badge/MSW-FF6A00?logo=msw&logoColor=white" />
+    </td>
+  </tr>
+</table>
+
+
 
 </br>
 
