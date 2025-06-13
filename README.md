@@ -9,14 +9,22 @@
 
 **Spoteditor**는 사용자가 지도를 검색하여 여러 장소를 선택하고, 이미지와 설명을 추가해 하나의 ‘로그’ 단위로 발행하는 SNS 기반 웹 어플리케이션입니다.
 
-</br>
+## 🚀 Getting Started
 
-## 📌 Service Features
+### 프로젝트 클론
+```
+git clone https://github.com/project2025-a/project2025-next.git
+```
 
-1. **로그 등록**: 카카오 맵을 통해 장소를 선택하고, 이미지와 설명을 추가하여 나만의 로그를 작성할 수 있습니다.
-2. **장소 검색 및 조회**: 검색어 입력 또는 셀렉트 박스를 활용하여 원하는 장소를 손쉽게 찾을 수 있습니다.
-3. **커뮤니티 기능**: 북마크 및 팔로우 기능을 통해 관심 있는 유저, 장소, 로그를 마이페이지에서 간편하게 관리할 수 있습니다.
-4. **반응형 디자인**: 데스크탑과 모바일에서 최적화된 UI/UX를 제공합니다.
+### 설치
+```
+npm install
+```
+
+### 실행
+```
+npm run dev
+```
 
 ## 🛠️ Tech Stack
 
@@ -53,10 +61,6 @@
   </tr>
 </table>
 
-
-
-</br>
-
 ## 📂 Folder Structure
 
 ```
@@ -91,31 +95,19 @@
 
 ```
 
-</br>
+## Functional Specification
 
-## 🚀 Getting Started
+| 주요 기능             | 세부 기능                  | 설명                                          |
+| ----------------- | ---------------------- | ------------------------------------------- |
+| **1. 로그 등록**      | 1.1 이미지 및 설명 첨부        | 장소에 대한 사진과 텍스트 설명을 등록하여 나만의 로그를 작성할 수 있습니다. |
+| **2. 장소 검색 및 조회** | 2.1 키워드 기반 검색          | 입력한 검색어를 기반으로 관련 장소를 조회할 수 있습니다.            |
+|                   | 2.2 셀렉트 박스를 활용한 필터링    | 카테고리 또는 지역 등 조건을 선택하여 장소를 좁혀볼 수 있습니다.       |
+| **3. 커뮤니티 기능**    | 3.1 장소/로그 북마크          | 관심 있는 장소와 로그를 북마크하여 저장할 수 있습니다.             |
+|                   | 3.2 사용자 팔로우 및 마이페이지 연동 | 팔로우한 사용자의 활동이 마이페이지에서 확인됩니다.                |
+| **4. 반응형 디자인**    | 4.1 모바일/PC 최적화         | 다양한 디바이스에 대응하는 UI/UX 제공                     |
 
 
-### 1. 프로젝트 클론
-git clone https://github.com/project2025-a/project2025-next.git
 
-### 2. 의존성 설치
-npm install
-
-### 3. 환경 변수 설정 (.env 파일 생성 후 아래 값 입력)
-#### Supabase 설정
-NEXT_PUBLIC_SUPABASE_URL=Supabase 프로젝트 URL  
-NEXT_PUBLIC_SUPABASE_ANON_KEY=Supabase 공개 키
-
-#### Prisma 설정 (Supabase DB 접속용)
-DATABASE_URL=Prisma가 사용할 Supabase DB 연결 URL  
-DIRECT_URL=Prisma Studio나 마이그레이션용 직접 접속 URL  
-
-#### 로컬 개발용 사이트 주소
-NEXT_PUBLIC_SITE_URL_LOCAL=로컬 개발 중 사용할 사이트 주소 (예: http://localhost:3000)
-
-### 4. 로컬 서버 실행
-yarn start
 
 ## Intro
 
