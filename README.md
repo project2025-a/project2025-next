@@ -9,6 +9,8 @@
 
 **Spoteditor**는 사용자가 여러 장소를 선택하고, 이미지와 설명을 추가해 하나의 ‘로그’ 단위로 발행하는 SNS 기반 웹 어플리케이션입니다.
 
+ - [Spoteditor 서비스 바로가기](https://www.thespoteditor.com/)
+
 ## 🚀 Getting Started
 
 ### 프로젝트 클론
