@@ -1,5 +1,6 @@
 import { logKeys, placeKeys, searchKeys } from '@/app/actions/keys';
 import { updateLog } from '@/app/actions/log-update';
+import { HOME } from '@/constants/pathname';
 import { useRouter } from '@/i18n/navigation';
 import { trackLogEditEvent } from '@/lib/analytics';
 import { useLogCreationStore } from '@/stores/logCreationStore';
@@ -20,7 +21,7 @@ const useLogEditMutation = () => {
   const clearTag = useLogCreationStore((state) => state.clearTag);
   return useMutation({
     mutationFn: ({ formData, logId }: LogEditMutationProps) => updateLog(formData, logId),
-    onSuccess: ({ success }, { logId }) => {
+    onSuccess: ({ success }) => {
       if (success) {
         trackLogEditEvent('complete');
 
@@ -33,7 +34,7 @@ const useLogEditMutation = () => {
           queryClient.removeQueries({ queryKey: key, exact: false });
         });
 
-        router.replace(`/log/${logId}`);
+        router.replace(HOME);
         toast.success(t('success'), {
           description: tToast('redirect'),
         });
