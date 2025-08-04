@@ -14,6 +14,10 @@ import prisma from 'prisma/prisma';
 import { placeKeys } from './keys';
 import { cacheTags, globalTags } from './tags';
 
+export async function revalidatePlaces() {
+  revalidateTag(globalTags.placeAll);
+}
+
 // ===================================================================
 // 장소 리스트
 // ===================================================================

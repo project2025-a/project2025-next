@@ -19,8 +19,6 @@ const useLogDeleteMutation = () => {
     onSuccess: ({ success }) => {
       if (success) {
         toast.success(t('success'));
-
-        //캐시 무효화
         const keysToInvalidate = [logKeys.all, placeKeys.all, searchKeys.all];
 
         keysToInvalidate.forEach((key) => {

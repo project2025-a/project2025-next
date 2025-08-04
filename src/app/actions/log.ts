@@ -15,6 +15,10 @@ import { deleteNestedFolderFiles } from './storage';
 import { cacheTags, globalTags } from './tags';
 import { getUser } from './user';
 
+export async function revalidateLogs() {
+  revalidateTag(globalTags.logAll);
+}
+
 // ===================================================================
 // 단일 로그
 // ===================================================================

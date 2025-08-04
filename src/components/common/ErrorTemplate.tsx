@@ -10,12 +10,14 @@ interface ErrorTemplateProps {
   title?: string;
   message?: string;
   invalidateKeys?: string[];
+  onMountEffect?: () => void;
 }
 
 export default function ErrorTemplate({
   title = '찾으시는 페이지를 찾을 수 없습니다.',
   message = 'URL 주소를 확인해주세요.',
   invalidateKeys,
+  onMountEffect,
 }: ErrorTemplateProps) {
   const router = useRouter();
   const t = useTranslations('NotFoundPage');
@@ -27,7 +29,11 @@ export default function ErrorTemplate({
         queryClient.removeQueries({ queryKey: [key] });
       });
     }
-  }, [invalidateKeys, queryClient]);
+
+    if (onMountEffect) {
+      onMountEffect();
+    }
+  }, [invalidateKeys, queryClient, onMountEffect]);
 
   const handleClick = () => router.replace('/');
   return (

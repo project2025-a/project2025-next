@@ -43,7 +43,7 @@ export default async function RootLayout({
           rel="icon"
           type="image/png"
           sizes="192x192"
-          href="/favicons/android-icon-192x192.png"
+          href="/favicons/android-chrome-192x192.png"
         />
         <meta name="msapplication-TileImage" content="/favicons/ms-icon-144x144.png" />
         {/* Clarity */}

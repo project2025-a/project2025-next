@@ -18,6 +18,10 @@ interface PatchUserProps {
   description?: string | null;
 }
 
+export async function revalidateUsers() {
+  revalidateTag(globalTags.userAll);
+}
+
 // ===================================================================
 // AUTH / 소셜로그인
 // ===================================================================
