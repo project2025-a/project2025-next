@@ -32,10 +32,9 @@ export async function generateMetadata(
   const title = user.nickname || '';
   const description = user.description || '';
   const rawPath = user.image_url;
-  const thumbnail = rawPath ? getStoragePublicImage(rawPath) : '/favicons/android-icon-192x192.png';
 
-  // 부모 메타데이터 이미지 가져오기
-  const previousImages = (await parent).openGraph?.images || [];
+  // 썸네일이 없으면 undefined로 두어 부모 OG를 상속
+  const thumbnail = rawPath ? getStoragePublicImage(rawPath) : undefined;
 
   return {
     title,
@@ -45,7 +44,8 @@ export async function generateMetadata(
       description,
       url: `${SITE_URL}/profile/${userId}`,
       siteName: 'Placesurf',
-      images: [{ url: thumbnail }, ...previousImages],
+      images: thumbnail ? [{ url: thumbnail, width: 1200, height: 630, alt: title }] : undefined, // ← 없으면 생략하여 부모 OG 상속
+
       type: 'article',
       locale: ogLocale,
     },
@@ -53,7 +53,7 @@ export async function generateMetadata(
       card: 'summary_large_image',
       title,
       description,
-      images: [{ url: thumbnail }],
+      images: thumbnail ? [thumbnail] : undefined,
     },
   };
 }

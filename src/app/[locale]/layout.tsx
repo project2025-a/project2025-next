@@ -1,4 +1,5 @@
 import { Toaster } from '@/components/ui/sonner';
+import { OR_IMAGE_PATHS } from '@/constants/pathname';
 import { routing } from '@/i18n/routing';
 import { pretendard, prompt, untitled } from '@/lib/fonts';
 import Providers from '@/providers';
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   openGraph: {
-    images: ['/favicons/android-icon-192x192.png'],
+    images: [OR_IMAGE_PATHS],
   },
 };
 

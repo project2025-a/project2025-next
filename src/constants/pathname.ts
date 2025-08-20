@@ -1,4 +1,5 @@
 export const SITE_URL = 'https://placesurf.xyz';
+export const OR_IMAGE_PATHS = '/favicons/og-image.jpg';
 
 export const HOME = '/';
 
