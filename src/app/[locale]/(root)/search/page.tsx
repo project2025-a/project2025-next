@@ -6,17 +6,14 @@ import { SITE_URL } from '@/constants/pathname';
 import { getQueryClient } from '@/lib/utils';
 import { getStoragePublicImage } from '@/utils/getStorageImage';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
-import { Metadata, ResolvingMetadata } from 'next';
+import { Metadata } from 'next';
 import { getLocale, getTranslations } from 'next-intl/server';
 
 interface SearchPageProps {
   searchParams: Promise<{ keyword: string; page: string }>;
 }
 
-export async function generateMetadata(
-  { searchParams }: SearchPageProps,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata({ searchParams }: SearchPageProps): Promise<Metadata> {
   const { keyword, page } = await searchParams;
 
   const parsedPage = Number(page);

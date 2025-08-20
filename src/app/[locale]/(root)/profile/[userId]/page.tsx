@@ -3,7 +3,7 @@ import ProfileHeader from '@/components/features/profile/ProfileHeader/ProfileHe
 import ProfileTabSection from '@/components/features/profile/ProfileTabContent/ProfileTabSection';
 import { SITE_URL } from '@/constants/pathname';
 import { getStoragePublicImage } from '@/utils/getStorageImage';
-import { Metadata, ResolvingMetadata } from 'next';
+import { Metadata } from 'next';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 
@@ -13,7 +13,6 @@ interface ProfilepageProps {
 
 export async function generateMetadata(
   { params }: ProfilepageProps,
-  parent: ResolvingMetadata
 ): Promise<Metadata> {
   const { userId } = await params;
   const t = await getTranslations('NotFoundPage');

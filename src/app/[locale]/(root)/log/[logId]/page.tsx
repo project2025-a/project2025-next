@@ -6,7 +6,7 @@ import LogDetailActions from '@/components/features/detail-log/LogDetailActions'
 import LogThumbnail from '@/components/features/detail-log/LogThumbnail';
 import { SITE_URL } from '@/constants/pathname';
 import { getStoragePublicImage } from '@/utils/getStorageImage';
-import { Metadata, ResolvingMetadata } from 'next';
+import { Metadata } from 'next';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 export interface LogIdParams {
@@ -16,10 +16,7 @@ interface LogDetailPageProps {
   params: Promise<LogIdParams>;
 }
 
-export async function generateMetadata(
-  { params }: LogDetailPageProps,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata({ params }: LogDetailPageProps): Promise<Metadata> {
   const { logId } = await params;
   const t = await getTranslations('NotFoundPage');
   const locale = await getLocale();
