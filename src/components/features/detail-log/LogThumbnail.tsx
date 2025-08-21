@@ -21,7 +21,7 @@ const LogThumbnail = ({ logData, isAuthor }: LogThumbnailProps) => {
   return (
     <section className="relative overflow-hidden h-[488px] flex flex-col justify-between px-4 web:px-[50px] pt-4 pb-8">
       <Image
-        src={getStoragePublicImage(place[0].place_images[0].image_path as string)}
+        src={getStoragePublicImage(place[0]?.place_images[0]?.image_path as string)}
         alt="로그 썸네일 이미지"
         fill
         className="object-cover web:blur-md web:scale-110"

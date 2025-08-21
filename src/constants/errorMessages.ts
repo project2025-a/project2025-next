@@ -41,3 +41,47 @@ export const ERROR_MESSAGES = {
     EMPTY: '검색 결과가 없습니다.',
   },
 };
+
+export const ERROR_MESSAGES_EN = {
+  COMMON: {
+    INTERNAL_SERVER_ERROR: 'An internal server error has occurred.',
+    EMPTY_RESULT: 'No results found.',
+    UNAUTHORIZED: 'Login is required.',
+    FORBIDDEN: 'You do not have permission to access this resource.',
+    BAD_REQUEST: 'Invalid request.',
+    COORDINATES_REQUIRED: 'Latitude and longitude are required.',
+    EXTERNAL_API_FAILED: 'Failed to retrieve location information.',
+    INVALID_RESPONSE: 'Invalid response format.',
+  },
+  LOG: {
+    NOT_FOUND: 'The specified log does not exist.',
+    LIST_EMPTY: 'No available logs found.',
+    CREATE_FAILED: 'Failed to create the log.',
+    DELETE_FAILED: 'Failed to delete the log.',
+    MISSING_ID: 'logId is missing.',
+  },
+  PLACE: {
+    NOT_FOUND: 'The specified place does not exist.',
+    LIST_EMPTY: 'No available places found.',
+    CREATE_FAILED: 'Failed to create the place.',
+    DELETE_FAILED: 'Failed to delete the place.',
+    REVERSE_GEOCODE_FAILED: 'Failed to find address from coordinates.',
+    NO_ADDRESS_FOUND: 'No address found for the specified coordinates.',
+  },
+  FOLLOW: {
+    NOT_FOUND: 'The specified follower does not exist.',
+    LIST_EMPTY: 'No available followers found.',
+    CREATE_FAILED: 'Failed to follow.',
+    DELETE_FAILED: 'Failed to unfollow.',
+  },
+  USER: {
+    NOT_FOUND: 'User information not found.',
+    DELETE_FAILED: 'Failed to delete the account.',
+    DELETE_SUCCESS: 'Account deletion completed successfully.',
+    ALREADY_DELETED: 'The user does not exist or has already been deleted.',
+  },
+  SEARCH: {
+    FAILED: 'Failed to retrieve search results.',
+    EMPTY: 'No search results found.',
+  },
+};

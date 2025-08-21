@@ -5,10 +5,11 @@ import { PostCard, PostCardWrapper } from '@/components/common/Card/PostCard';
 import CustomPagination from '@/components/common/CustomPagination';
 import FallbackMessage from '@/components/common/FallbackMessage';
 import { TitledSection } from '@/components/common/SectionBlock';
-import { ERROR_MESSAGES } from '@/constants/errorMessages';
+import { ERROR_MESSAGES, ERROR_MESSAGES_EN } from '@/constants/errorMessages';
 import useLogs from '@/hooks/queries/log/useLogs';
 import useQueryPagination from '@/hooks/useQueryPagination';
 import { cn } from '@/lib/utils';
+import { useLocale } from 'next-intl';
 import { useRef } from 'react';
 
 interface LatestLogContentProps {
@@ -16,6 +17,9 @@ interface LatestLogContentProps {
 }
 
 export default function LatestLogContent({ currentPage }: LatestLogContentProps) {
+  const locale = useLocale();
+  const M = locale === 'en' ? ERROR_MESSAGES_EN : ERROR_MESSAGES;
+
   const contentRef = useRef<HTMLElement | null>(null);
   const { handlePageChange } = useQueryPagination('logPage', currentPage, contentRef);
   const { data } = useLogs({ currentPage, pageSize: 13, sort: 'latest' });
@@ -23,11 +27,7 @@ export default function LatestLogContent({ currentPage }: LatestLogContentProps)
   if ((data && !data?.success) || data?.data.length === 0) {
     return (
       <FallbackMessage
-        message={
-          !data.success
-            ? ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR
-            : ERROR_MESSAGES.LOG.LIST_EMPTY
-        }
+        message={!data.success ? M.COMMON.INTERNAL_SERVER_ERROR : M.LOG.LIST_EMPTY}
         className="items-center"
       />
     );

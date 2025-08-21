@@ -11,11 +11,12 @@ export async function GET(req: NextRequest) {
   const userId = userIdParam && userIdParam !== 'null' ? userIdParam : undefined;
   const currentPage = parseInt(searchParams.get('currentPage') || '1');
   const pageSize = parseInt(searchParams.get('pageSize') || '12');
+  const locale = searchParams.get('locale') || 'ko';
 
   try {
-    const result = await fetchLogs({ userId, currentPage, pageSize });
+    const result = await fetchLogs({ userId, currentPage, pageSize, locale });
 
-    revalidateTag(globalTags.logAll)
+    revalidateTag(globalTags.logAll);
 
     if (!result.success) {
       return NextResponse.json(result, {

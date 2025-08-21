@@ -2,12 +2,15 @@ import { revalidateLog } from '@/app/actions/log';
 import { getUser } from '@/app/actions/user';
 import { ERROR_CODES } from '@/constants/errorCode';
 import { ERROR_MESSAGES } from '@/constants/errorMessages';
+import { Prisma } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from 'prisma/prisma';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const logId = searchParams.get('logId');
+  const locale = searchParams.get('locale');
+  const isEn = locale === 'en';
   const me = await getUser();
 
   if (!me) {
@@ -32,12 +35,25 @@ export async function GET(req: NextRequest) {
     );
   }
   try {
-    const logBookmark = await prisma.log_bookmark.findFirst({
-      where: {
-        user_id: me?.user_id,
-        log_id: String(logId),
-      },
-    });
+    let logBookmark: any = {};
+
+    if (isEn) {
+      const dbLogBookmark = await prisma.log_bookmark_en.findFirst({
+        where: {
+          user_id: me?.user_id,
+          log_id: String(logId),
+        },
+      });
+      logBookmark = dbLogBookmark;
+    } else {
+      const dbLogBookmark = await prisma.log_bookmark.findFirst({
+        where: {
+          user_id: me?.user_id,
+          log_id: String(logId),
+        },
+      });
+      logBookmark = dbLogBookmark;
+    }
 
     return NextResponse.json(
       {
@@ -62,6 +78,9 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const logId = searchParams.get('logId');
+  const locale = searchParams.get('locale');
+  const isEn = locale === 'en';
+
   const me = await getUser();
 
   if (!me) {
@@ -86,24 +105,47 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const existing = await prisma.log_bookmark.findFirst({
-    where: {
-      user_id: me.user_id,
-      log_id: String(logId),
-    },
-  });
+  let existing: boolean;
+
+  if (isEn) {
+    const dbExisting = await prisma.log_bookmark_en.findFirst({
+      where: {
+        user_id: me.user_id,
+        log_id: String(logId),
+      },
+    });
+
+    existing = !!dbExisting;
+  } else {
+    const dbExisting = await prisma.log_bookmark.findFirst({
+      where: {
+        user_id: me.user_id,
+        log_id: String(logId),
+      },
+    });
+    existing = !!dbExisting;
+  }
 
   if (existing) {
     return NextResponse.json({ success: true, isBookmark: true }, { status: 200 });
   }
 
   try {
-    await prisma.log_bookmark.create({
-      data: {
-        user_id: me.user_id,
-        log_id: String(logId),
-      },
-    });
+    if (isEn) {
+      await prisma.log_bookmark_en.create({
+        data: {
+          user_id: me.user_id,
+          log_id: String(logId),
+        },
+      });
+    } else {
+      await prisma.log_bookmark.create({
+        data: {
+          user_id: me.user_id,
+          log_id: String(logId),
+        },
+      });
+    }
 
     /* 북마크 시 로그 서버캐시 무효화(버그 수정) */
     await revalidateLog(logId);
@@ -125,6 +167,9 @@ export async function POST(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const logId = searchParams.get('logId');
+  const locale = searchParams.get('locale');
+  const isEn = locale === 'en';
+
   const me = await getUser();
 
   if (!me) {
@@ -150,12 +195,25 @@ export async function DELETE(req: NextRequest) {
   }
 
   try {
-    const deleted = await prisma.log_bookmark.deleteMany({
-      where: {
-        user_id: me.user_id,
-        log_id: String(logId),
-      },
-    });
+    let deleted: Prisma.BatchPayload;
+
+    if (isEn) {
+      const dbDeleted = await prisma.log_bookmark_en.deleteMany({
+        where: {
+          user_id: me.user_id,
+          log_id: String(logId),
+        },
+      });
+      deleted = dbDeleted;
+    } else {
+      const dbDeleted = await prisma.log_bookmark.deleteMany({
+        where: {
+          user_id: me.user_id,
+          log_id: String(logId),
+        },
+      });
+      deleted = dbDeleted;
+    }
 
     if (deleted.count === 0) {
       return NextResponse.json(

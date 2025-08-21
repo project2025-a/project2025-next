@@ -9,9 +9,10 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const currentPage = parseInt(searchParams.get('currentPage') || '1');
   const pageSize = parseInt(searchParams.get('pageSize') || '12');
+  const locale = searchParams.get('locale') || 'ko';
 
   try {
-    const result = await fetchPlaces({ currentPage, pageSize });
+    const result = await fetchPlaces({ currentPage, pageSize, locale });
 
     revalidateTag(globalTags.placeAll);
 

@@ -32,6 +32,7 @@ export async function createClient() {
           }
         },
       },
+      db: { schema: 'public' }, // 기본 스키마. en은 쿼리에서 .schema('en')로 지정
     }
   );
 }

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { REGISTER_PATHS } from '@/constants/pathname';
 import { useRouter } from '@/i18n/navigation';
-import { useProfileTabStore } from '@/stores/profileStore';
+import { TabType, useProfileTabStore } from '@/stores/profileStore';
 import { IUser } from '@/types/api/user';
 import { useTranslations } from 'next-intl';
 import TabButton from './TabButton';
@@ -20,7 +20,8 @@ export default function ProfileTabs({ me, userId }: ProfileTabsProps) {
   const { tab, setTab } = useProfileTabStore();
   const router = useRouter();
   const handleGotoRegisterPage = () => router.push(`${REGISTER_PATHS.MOOD}`);
-  const onTabClick = (tab: 'myLog' | 'savedSpaces' | 'savedLog') => {
+
+  const onTabClick = (tab: TabType) => {
     setTab(tab);
   };
 

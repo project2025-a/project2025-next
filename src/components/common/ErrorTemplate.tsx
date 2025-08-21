@@ -10,14 +10,14 @@ interface ErrorTemplateProps {
   title?: string;
   message?: string;
   invalidateKeys?: string[];
-  onMountEffect?: () => void;
+  revalidated?: 'detailLog' | 'profile';
 }
 
 export default function ErrorTemplate({
-  title = '찾으시는 페이지를 찾을 수 없습니다.',
-  message = 'URL 주소를 확인해주세요.',
+  title,
+  message,
   invalidateKeys,
-  onMountEffect,
+  revalidated,
 }: ErrorTemplateProps) {
   const router = useRouter();
   const t = useTranslations('NotFoundPage');
@@ -29,22 +29,28 @@ export default function ErrorTemplate({
         queryClient.removeQueries({ queryKey: [key] });
       });
     }
+  }, [invalidateKeys, queryClient]);
 
-    if (onMountEffect) {
-      onMountEffect();
+  useEffect(() => {
+    if (revalidated === 'detailLog') {
+      fetch('/api/detail-log').then(() => {});
     }
-  }, [invalidateKeys, queryClient, onMountEffect]);
+    if (revalidated === 'profile') {
+      fetch('/api/user-profile').then(() => {});
+    }
+  }, [revalidated]);
 
   const handleClick = () => router.replace('/');
+
   return (
     <main className="flex flex-col items-center justify-center h-dvh grow">
       <Image src="/images/404.png" alt="404" width={300} height={200} />
       <div className="flex flex-col items-center mt-[50px] mb-5">
-        <h4 className="text-text-xl font-bold">{title ?? t('title')}</h4>
-        <h5 className="text-center">{message ?? t('defaultMessage')}</h5>
+        <h4 className="text-text-xl font-bold">{title ? title : t('title')}</h4>
+        <h5 className="text-center">{message ? message : t('defaultMessage')}</h5>
       </div>
       <Button className="rounded-full mt-5" size={'lg'} onClick={handleClick}>
-        홈으로 이동
+        {t('button')}
       </Button>
     </main>
   );

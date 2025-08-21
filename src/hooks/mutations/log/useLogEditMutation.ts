@@ -19,6 +19,10 @@ const useLogEditMutation = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const clearTag = useLogCreationStore((state) => state.clearTag);
+
+  // const locale = useLocale();
+  // const normalizedLocale = locale === 'en' ? 'en' : 'ko';
+
   return useMutation({
     mutationFn: ({ formData, logId }: LogEditMutationProps) => updateLog(formData, logId),
     onSuccess: ({ success }) => {

@@ -11,6 +11,7 @@ export async function GET(req: NextRequest) {
   const userId = searchParams.get('userId');
   const currentPage = parseInt(searchParams.get('page') ?? '1', 10);
   const pageSize = parseInt(searchParams.get('pageSize') ?? '12', 12);
+  const locale = searchParams.get('locale') || 'ko';
 
   if (!userId) {
     return NextResponse.json(
@@ -24,7 +25,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const result = await fetchBookmarkedPlaces({ userId, currentPage, pageSize });
+    const result = await fetchBookmarkedPlaces({ userId, currentPage, pageSize, locale });
 
     revalidateTag(globalTags.placeAll);
 

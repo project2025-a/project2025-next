@@ -2,7 +2,12 @@ import XButton from '@/components/common/Button/XButton';
 import { ModalContent, ModalHeader } from '@/components/common/Modal';
 import LoginAgreementNotice from '@/components/features/login/LoginAgreementNotice';
 import SocialLoginButtons from '@/components/features/login/SocialLoginButtons';
+import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
+
+export const metadata: Metadata = {
+  title: 'login',
+};
 
 export default async function LoginModal() {
   const t = await getTranslations('LoginModal');

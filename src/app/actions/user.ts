@@ -49,17 +49,18 @@ async function fetchUserPrisma(userId: string) {
 
     if (!user) return null;
 
-    const followerCount = await prisma.follow.count({
-      where: {
-        following_id: userId,
-      },
-    });
-
-    const followingCount = await prisma.follow.count({
-      where: {
-        follower_id: userId,
-      },
-    });
+    const [followerCount, followingCount] = await Promise.all([
+      prisma.follow.count({
+        where: {
+          following_id: userId,
+        },
+      }),
+      prisma.follow.count({
+        where: {
+          follower_id: userId,
+        },
+      }),
+    ]);
 
     return {
       ...user,

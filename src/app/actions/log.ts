@@ -4,16 +4,30 @@ import { ERROR_CODES } from '@/constants/errorCode';
 import { ERROR_MESSAGES } from '@/constants/errorMessages';
 import { CACHE_REVALIDATE_TIME, DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE } from '@/constants/fetchConfig';
 import { createClient } from '@/lib/supabase/server';
-import { ApiResponse } from '@/types/api/common';
+import { setLocaleTable } from '@/lib/utils';
+import { ApiResponse, LogWithUserAndAddress } from '@/types/api/common';
 import { DetailLog, logBookmarkListParams, LogsParams, LogsResponse } from '@/types/api/log';
 import { SearchParams, SearchResponse } from '@/types/api/search';
-import { Prisma } from '@prisma/client';
+import { getLocale } from 'next-intl/server';
 import { revalidateTag, unstable_cache } from 'next/cache';
 import prisma from 'prisma/prisma';
 import { logKeys, searchKeys } from './keys';
+import { ILocale } from './log-register';
 import { deleteNestedFolderFiles } from './storage';
 import { cacheTags, globalTags } from './tags';
 import { getUser } from './user';
+import {
+  getBookmarkedLogsFindArgsEn,
+  getBookmarkedLogsFindArgsKo,
+  getLogFindArgsEn,
+  getLogFindArgsKo,
+  getLogsFindArgsEn,
+  getLogsFindArgsKo,
+  getSearchLogsFindArgsEn,
+  getSearchLogsFindArgsKo,
+  getWhereConditionEn,
+  getWhereConditionKo,
+} from './utils/logService';
 
 export async function revalidateLogs() {
   revalidateTag(globalTags.logAll);
@@ -23,44 +37,94 @@ export async function revalidateLogs() {
 // 단일 로그
 // ===================================================================
 
-export async function fetchLog(logId: string): Promise<ApiResponse<DetailLog>> {
+export async function fetchLog(logId: string, locale: string): Promise<ApiResponse<DetailLog>> {
   try {
-    const log = await prisma.log.findUnique({
-      where: { log_id: logId },
-      include: {
+    let log: DetailLog;
+
+    //영문, 국문 분기
+    if (locale === 'en') {
+      const logFindArgs = getLogFindArgsEn();
+      const dbLog = await prisma.log_en.findUnique({
+        where: { log_id: logId },
+        include: logFindArgs,
+      });
+      log = {
+        address: (dbLog?.address_en ?? []).map((address) => address),
+        created_at: dbLog?.created_at.toString() ?? '',
+        log_id: dbLog?.log_id ?? '',
+        log_tag: (dbLog?.log_tag_en ?? []).map((tag) => tag),
+        place: (dbLog?.place_en ?? []).map((place) => ({
+          place_id: place.place_id,
+          address: place.address,
+          category: place.category,
+          name: place.name,
+          order: place.order,
+          created_at: String(place.created_at),
+          updated_at: String(place.updated_at),
+          description: place.description,
+          log_id: place.log_id,
+          place_images: (place.place_images_en ?? []).map((img) => ({
+            place_id: img.place_id,
+            place_image_id: img.place_image_id,
+            order: img.order,
+            image_path: img.image_path,
+          })),
+          _count: {
+            place_bookmark: place._count.place_bookmark_en,
+          },
+        })),
+        title: dbLog?.title ?? '',
+        user_id: dbLog?.user_id ?? '',
         users: {
-          select: {
-            nickname: true,
-            image_url: true,
-          },
+          image_url: dbLog?.users.image_url ?? '',
+          nickname: dbLog?.users.nickname ?? '',
         },
-        place: {
-          include: {
-            place_images: {
-              orderBy: { order: 'asc' },
-            },
-            _count: { select: { place_bookmark: true } },
-          },
-          orderBy: {
-            order: 'asc',
-          },
+        _count: {
+          log_bookmark: dbLog?._count.log_bookmark_en ?? 0,
         },
-        log_tag: {
-          select: {
-            category: true,
-            tag: true,
+      };
+    } else {
+      const logFindArgs = getLogFindArgsKo();
+      const dbLog = await prisma.log.findUnique({
+        where: { log_id: logId },
+        include: logFindArgs,
+      });
+      log = {
+        address: (dbLog?.address ?? []).map((address) => address),
+        created_at: dbLog?.created_at.toString() ?? '',
+        log_id: dbLog?.log_id ?? '',
+        log_tag: (dbLog?.log_tag ?? []).map((tag) => tag),
+        place: (dbLog?.place ?? []).map((place) => ({
+          place_id: place.place_id,
+          address: place.address,
+          category: place.category,
+          name: place.name,
+          order: place.order,
+          created_at: String(place.created_at),
+          updated_at: String(place.updated_at),
+          description: place.description,
+          log_id: place.log_id,
+          place_images: (place.place_images ?? []).map((img) => ({
+            place_id: img.place_id,
+            place_image_id: img.place_image_id,
+            order: img.order,
+            image_path: img.image_path,
+          })),
+          _count: {
+            place_bookmark: place._count.place_bookmark,
           },
+        })),
+        title: dbLog?.title ?? '',
+        user_id: dbLog?.user_id ?? '',
+        users: {
+          image_url: dbLog?.users.image_url ?? '',
+          nickname: dbLog?.users.nickname ?? '',
         },
-        address: {
-          select: {
-            country: true,
-            city: true,
-            sigungu: true,
-          },
+        _count: {
+          log_bookmark: dbLog?._count.log_bookmark ?? 0,
         },
-        _count: { select: { log_bookmark: true } },
-      },
-    });
+      };
+    }
 
     if (!log) {
       return {
@@ -86,8 +150,9 @@ export async function fetchLog(logId: string): Promise<ApiResponse<DetailLog>> {
 
 /* 로그 상세 조회 */
 export async function getLog(logId: string) {
-  return unstable_cache(() => fetchLog(logId), [...cacheTags.logDetail(logId)], {
-    tags: [cacheTags.logDetail(logId), globalTags.logAll], // 상위 그룹 태그 추가
+  const locale = await getLocale();
+  return unstable_cache(() => fetchLog(logId, locale), [...cacheTags.logDetail(logId, locale)], {
+    tags: [cacheTags.logDetail(logId, locale), globalTags.logAll], // 상위 그룹 태그 추가
     revalidate: CACHE_REVALIDATE_TIME,
   })();
 }
@@ -101,8 +166,12 @@ export async function revalidateLog(logId: string) {
 // 로그 삭제
 // ===================================================================
 
-export async function deleteLog(logId: string): Promise<ApiResponse<null>> {
+export async function deleteLog(logId: string, locale: ILocale): Promise<ApiResponse<null>> {
   const me = await getUser();
+  const table = setLocaleTable('log', locale);
+  const isEn = locale === 'en';
+  const schema = isEn ? 'en' : 'public';
+
   if (!me) {
     return {
       success: false,
@@ -118,7 +187,11 @@ export async function deleteLog(logId: string): Promise<ApiResponse<null>> {
     if (!user) throw new Error('유저 정보 없음');
 
     // 로그 삭제
-    const { error: logDeleteError } = await supabase.from('log').delete().eq('log_id', logId);
+    const { error: logDeleteError } = await supabase
+      .schema(schema)
+      .from(table)
+      .delete()
+      .eq('log_id', logId);
     if (logDeleteError) {
       console.error('로그 삭제 실패', logDeleteError);
       throw new Error('로그 삭제 실패');
@@ -160,8 +233,11 @@ export async function fetchLogs({
   pageSize = DEFAULT_PAGE_SIZE,
   sort = 'latest',
   userId,
+  locale,
 }: LogsParams): Promise<LogsResponse> {
   try {
+    const isEn = locale === 'en';
+
     const safePage = Math.max(1, currentPage);
     const safeSize = Math.min(Math.max(1, pageSize), MAX_PAGE_SIZE);
     const skip = (safePage - 1) * safeSize; // 몇 개 건너뛸지 계산
@@ -169,52 +245,39 @@ export async function fetchLogs({
     /* userId가 있을 경우 마이로그에서 쓸 로그리스트 반환 */
     const where = userId ? { user_id: userId } : undefined;
 
-    const [logs, totalCount] = await Promise.all([
-      prisma.log.findMany({
-        skip, // 앞에서 몇 개 건너뛸지
-        take: safeSize, // 가져올 데이터 수
-        where,
+    let logs: LogWithUserAndAddress[] = [];
+    let totalCount: number = 0;
 
-        // 정렬 기준 설정: 인기순이면 북마크 개수 기준(연결된 테이블의 개수를 기준으로 정렬), 기본은 최신순
-        orderBy: sort === 'popular' ? { log_bookmark: { _count: 'desc' } } : { created_at: 'desc' },
-        select: {
-          log_id: true,
-          title: true,
-          place: {
-            take: 1,
-            orderBy: {
-              order: 'asc',
-            },
-            select: {
-              place_images: {
-                take: 1,
-                orderBy: {
-                  order: 'asc',
-                },
-                select: {
-                  image_path: true,
-                },
-              },
-            },
-          },
-          users: {
-            select: {
-              user_id: true,
-              nickname: true,
-            },
-          },
-          address: {
-            select: {
-              country: true,
-              city: true,
-              sigungu: true,
-            },
-          },
-        },
-      }),
-      // 전체 로그 수 카운트 (페이지 수 계산에 사용)
-      prisma.log.count({ where }),
-    ]);
+    //영문, 국문 분기
+    if (isEn) {
+      const logFindArgs = getLogsFindArgsEn({ skip, safeSize, sort, where });
+      const [dbLogs, dbTalCount] = await Promise.all([
+        prisma.log_en.findMany(logFindArgs),
+        // 전체 로그 수 카운트 (페이지 수 계산에 사용)
+        prisma.log_en.count({ where }),
+      ]);
+
+      logs = dbLogs.map((log) => ({
+        log_id: log.log_id,
+        title: log.title,
+        users: log.users,
+        address: log.address_en,
+        place: log.place_en.map((p) => ({
+          place_images: p.place_images_en,
+        })),
+      }));
+      totalCount = dbTalCount;
+    } else {
+      const logFindArgs = getLogsFindArgsKo({ skip, safeSize, sort, where });
+
+      const [dbLogs, dbTotalCount] = await Promise.all([
+        prisma.log.findMany(logFindArgs),
+        prisma.log.count({ where }),
+      ]);
+
+      logs = dbLogs;
+      totalCount = dbTotalCount;
+    }
 
     return {
       success: true,
@@ -240,11 +303,18 @@ export async function fetchLogs({
 }
 
 export async function getLogs(params: LogsParams) {
-  const queryKey = params.userId ? logKeys.listByUser(params) : logKeys.list(params);
+  const locale = await getLocale();
+  const localeParams = { ...params, locale };
 
-  const tagKey = params.userId ? cacheTags.logListByUser(params) : cacheTags.logList(params);
+  const queryKey = localeParams.userId
+    ? logKeys.listByUser(localeParams)
+    : logKeys.list(localeParams);
 
-  return unstable_cache(() => fetchLogs(params), [...queryKey].filter(Boolean), {
+  const tagKey = localeParams.userId
+    ? cacheTags.logListByUser(localeParams)
+    : cacheTags.logList(localeParams);
+
+  return unstable_cache(() => fetchLogs(localeParams), [...queryKey].filter(Boolean), {
     tags: [tagKey, globalTags.logAll], // 상위 그룹 태그 추가
     revalidate: CACHE_REVALIDATE_TIME,
   })();
@@ -257,65 +327,85 @@ export async function fetchBookmarkedLogs({
   userId,
   currentPage = 1,
   pageSize = DEFAULT_PAGE_SIZE,
+  locale,
 }: logBookmarkListParams): Promise<LogsResponse> {
   try {
+    const isEn = locale === 'en';
+
     const safePage = Math.max(1, currentPage);
     const safeSize = Math.min(Math.max(1, pageSize), MAX_PAGE_SIZE);
     const skip = (safePage - 1) * safeSize;
 
-    const bookmarkedLogs = await prisma.log_bookmark.findMany({
-      where: { user_id: userId },
-      skip,
-      take: pageSize,
-      orderBy: {
-        log: {
-          created_at: 'desc',
-        },
-      },
-      include: {
-        log: {
-          select: {
-            log_id: true,
-            title: true,
-            place: {
-              take: 1,
-              select: {
-                place_images: {
-                  take: 1,
-                  select: {
-                    image_path: true,
-                  },
-                },
-              },
-            },
-            users: {
-              select: {
-                user_id: true,
-                nickname: true,
-              },
-            },
-            address: {
-              select: {
-                country: true,
-                city: true,
-                sigungu: true,
-              },
-            },
-          },
-        },
-      },
-    });
+    let bookmarkedLogs: LogWithUserAndAddress[] = [];
+    let totalCount: number = 0;
 
-    // 전체 로그북마크 수 카운트 (페이지 수 계산에 사용)
-    const totalCount = await prisma.log_bookmark.count({
-      where: { user_id: userId },
-    });
+    //영문, 국문 분기
+    if (isEn) {
+      const bookmarkedLogsFindArgs = getBookmarkedLogsFindArgsEn({
+        userId,
+        skip,
+        pageSize,
+      });
 
-    //실제로 존재하는 log만 필터링, 예: 로그가 삭제된 북마크가 있을 경우
-    const filterBookmarkedLogs = bookmarkedLogs.map((b) => b.log).filter(Boolean);
+      const [dbBookmarkedLogs, dbTotalCount] = await Promise.all([
+        prisma.log_bookmark_en.findMany(bookmarkedLogsFindArgs),
+        prisma.log_bookmark_en.count({
+          where: { user_id: userId },
+        }),
+      ]);
+
+      bookmarkedLogs = dbBookmarkedLogs
+        .map((log) => {
+          const logEn = log.log_en;
+          if (!logEn) return null;
+
+          return {
+            log_id: logEn.log_id,
+            title: logEn.title,
+            users: logEn.users,
+            place: logEn.place_en.map((place) => ({
+              place_images: place.place_images_en,
+            })),
+            address: logEn.address_en,
+          };
+        })
+        .filter(Boolean);
+      totalCount = dbTotalCount;
+    } else {
+      const bookmarkedLogsFindArgs = getBookmarkedLogsFindArgsKo({
+        userId,
+        skip,
+        pageSize,
+      });
+      const [dbBookmarkedLogs, dbTotalCount] = await Promise.all([
+        prisma.log_bookmark.findMany(bookmarkedLogsFindArgs),
+        prisma.log_bookmark.count({
+          where: { user_id: userId },
+        }),
+      ]);
+
+      bookmarkedLogs = dbBookmarkedLogs
+        .map((item) => {
+          const log = item.log;
+          if (!log) return null;
+
+          return {
+            log_id: log.log_id,
+            title: log.title,
+            users: log.users,
+            place: log.place.map((p) => ({
+              place_images: p.place_images,
+            })),
+            address: log.address,
+          };
+        })
+        .filter(Boolean);
+      totalCount = dbTotalCount;
+    }
+
     return {
       success: true,
-      data: filterBookmarkedLogs,
+      data: bookmarkedLogs,
       meta: {
         pagination: {
           currentPage: safePage,
@@ -337,12 +427,14 @@ export async function fetchBookmarkedLogs({
 }
 
 export async function getBookmarkedLogs(params: logBookmarkListParams) {
+  const locale = await getLocale();
+  const localeParams = { ...params, locale };
   return unstable_cache(
-    () => fetchBookmarkedLogs(params),
-    [...logKeys.bookmarkList(params)].filter(Boolean),
+    () => fetchBookmarkedLogs(localeParams),
+    [...logKeys.bookmarkList(localeParams)].filter(Boolean),
     {
       tags: [
-        cacheTags.logBookmarkList(params), // 특정 페이지 북마크 리스트
+        cacheTags.logBookmarkList(localeParams), // 특정 페이지 북마크 리스트
         globalTags.logAll, // 전체 북마크 리스트 무효화용 상위 태그
       ],
       revalidate: CACHE_REVALIDATE_TIME,
@@ -366,102 +458,51 @@ export async function fetchSearchLogs({
   currentPage = 1,
   pageSize = DEFAULT_PAGE_SIZE,
   sort = 'latest',
+  locale,
 }: SearchParams): Promise<SearchResponse> {
   try {
+    const isEn = locale === 'en';
+
     const safePage = Math.max(1, currentPage);
     const safeSize = Math.min(Math.max(1, pageSize), MAX_PAGE_SIZE);
     const skip = (safePage - 1) * safeSize; // 몇 개 건너뛸지 계산
 
-    // 검색 조건 구성
-    const searchConditions = [];
+    let searchData: LogWithUserAndAddress[] = [];
+    let totalCount: number = 0;
 
-    if (keyword) {
-      searchConditions.push({
-        OR: [
-          { title: { contains: keyword, mode: 'insensitive' } },
-          { place: { some: { name: { contains: keyword, mode: 'insensitive' } } } },
-          {
-            address: {
-              some: {
-                city: { contains: keyword, mode: 'insensitive' },
-              },
-            },
-          },
-          {
-            address: {
-              some: {
-                sigungu: { contains: keyword, mode: 'insensitive' },
-              },
-            },
-          },
-        ],
-      });
+    if (isEn) {
+      const whereCondition = getWhereConditionEn({ keyword, city, sigungu });
+      const searchLogsFindArgs = getSearchLogsFindArgsEn({ skip, safeSize, sort, whereCondition });
+      const [dbSearchData, dbTotalCount] = await Promise.all([
+        prisma.log_en.findMany(searchLogsFindArgs),
+        prisma.log_en.count({
+          where: whereCondition,
+        }),
+      ]);
+
+      searchData = dbSearchData.map((log) => ({
+        log_id: log.log_id,
+        title: log.title,
+        users: log.users,
+        place: log.place_en.map((p) => ({
+          place_images: p.place_images_en,
+        })),
+        address: log.address_en,
+      }));
+      totalCount = dbTotalCount;
+    } else {
+      const whereCondition = getWhereConditionKo({ keyword, city, sigungu });
+      const searchLogsFindArgs = getSearchLogsFindArgsKo({ skip, safeSize, sort, whereCondition });
+      const [dbSearchData, dbTotalCount] = await Promise.all([
+        prisma.log.findMany(searchLogsFindArgs),
+        prisma.log.count({
+          where: whereCondition,
+        }),
+      ]);
+
+      searchData = dbSearchData;
+      totalCount = dbTotalCount;
     }
-
-    if (city) {
-      searchConditions.push({
-        address: {
-          some: {
-            city: { equals: city },
-          },
-        },
-      });
-    }
-
-    if (sigungu) {
-      searchConditions.push({
-        address: {
-          some: {
-            sigungu: { contains: sigungu, mode: 'insensitive' },
-          },
-        },
-      });
-    }
-
-    const whereCondition =
-      searchConditions.length > 0 ? { AND: searchConditions as Prisma.logWhereInput[] } : {};
-
-    const [searchData, totalCount] = await Promise.all([
-      prisma.log.findMany({
-        skip, // 앞에서 몇 개 건너뛸지
-        take: safeSize, // 가져올 데이터 수
-        where: whereCondition,
-
-        // 정렬 기준 설정: 인기순이면 북마크 개수 기준(연결된 테이블의 개수를 기준으로 정렬), 기본은 최신순
-        orderBy: sort === 'popular' ? { log_bookmark: { _count: 'desc' } } : { created_at: 'desc' },
-        select: {
-          log_id: true,
-          title: true,
-          place: {
-            take: 1,
-            select: {
-              place_images: {
-                take: 1,
-                select: {
-                  image_path: true,
-                },
-              },
-            },
-          },
-          users: {
-            select: {
-              user_id: true,
-              nickname: true,
-            },
-          },
-          address: {
-            select: {
-              country: true,
-              city: true,
-              sigungu: true,
-            },
-          },
-        },
-      }),
-      prisma.log.count({
-        where: whereCondition,
-      }),
-    ]);
 
     if (!searchData || searchData.length === 0) {
       return {
@@ -495,12 +536,14 @@ export async function fetchSearchLogs({
 }
 
 export async function getSearchLogs(params: SearchParams) {
+  const locale = await getLocale();
+  const localeParams = { ...params, locale };
   return unstable_cache(
-    () => fetchSearchLogs(params),
-    [...searchKeys.list(params)].filter(Boolean),
+    () => fetchSearchLogs(localeParams),
+    [...searchKeys.list(localeParams)].filter(Boolean),
     {
       tags: [
-        cacheTags.searchList(params), // 조건별로 구분되는 태그
+        cacheTags.searchList(localeParams), // 조건별로 구분되는 태그
         globalTags.searchAll, // 전체 무효화용 상위 태그
       ],
       revalidate: CACHE_REVALIDATE_TIME,

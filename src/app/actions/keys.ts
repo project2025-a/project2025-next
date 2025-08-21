@@ -55,29 +55,45 @@ export const logKeys = {
   all: ['log'] as const,
 
   // 특정 로그 상세 정보
-  detail: (logId: string) => safeKey(...logKeys.all, 'detail', logId),
+  detail: (logId: string, locale: string = 'ko') =>
+    safeKey(...logKeys.all, 'detail', `locale-${locale}`, logId),
 
   // 로그 목록 (전체)
-  list: ({ currentPage = 1, pageSize = 10, sort = 'latest' }: LogsParams) =>
-    safeKey(...logKeys.all, 'list', `page-${currentPage}`, `size-${pageSize}`, `sort-${sort}`),
+  list: ({ currentPage = 1, pageSize = 10, sort = 'latest', locale = 'ko' }: LogsParams) =>
+    safeKey(
+      ...logKeys.all,
+      'list',
+      `locale-${locale}`,
+      `page-${currentPage}`,
+      `size-${pageSize}`,
+      `sort-${sort}`
+    ),
 
   // 특정 유저 로그 목록
-  listByUser: ({ userId, currentPage = 1, pageSize = 10 }: LogsParams) =>
-    safeKey(...logKeys.all, 'byUser', userId, `page-${currentPage}`, `size-${pageSize}`),
+  listByUser: ({ userId, currentPage = 1, pageSize = 10, locale = 'ko' }: LogsParams) =>
+    safeKey(
+      ...logKeys.all,
+      'byUser',
+      `locale-${locale}`,
+      userId,
+      `page-${currentPage}`,
+      `size-${pageSize}`
+    ),
 
   // 북마크된 로그 목록
-  bookmarkList: ({ userId, currentPage, pageSize }: logBookmarkListParams) =>
+  bookmarkList: ({ userId, currentPage, pageSize, locale = 'ko' }: logBookmarkListParams) =>
     safeKey(
       ...logKeys.all,
       'bookmarks',
+      `locale-${locale}`,
       `user-${userId}`,
       `page-${currentPage}`,
       `size-${pageSize}`
     ),
 
   // 특정 로그 북마크 상태
-  bookmarkStatus: (logId: string, userId: string) =>
-    safeKey(...logKeys.all, 'bookmark-status', logId, `user-${userId}`),
+  bookmarkStatus: (logId: string, userId: string, locale: string) =>
+    safeKey(...logKeys.all, 'bookmark-status', `locale-${locale}`, logId, `user-${userId}`),
 };
 
 // ============================================================================
@@ -87,25 +103,38 @@ export const placeKeys = {
   all: ['place'] as const,
 
   // 특정 장소 상세 정보
-  detail: (placeId: string) => safeKey(...placeKeys.all, 'detail', placeId),
+  detail: (placeId: string, locale: string = 'ko') =>
+    safeKey(...placeKeys.all, 'detail', `locale-${locale}`, placeId),
 
   // 장소 목록
-  list: ({ currentPage = 1, pageSize = 10 }: PaginationParams) =>
-    safeKey(...placeKeys.all, 'list', `page-${currentPage}`, `size-${pageSize}`),
+  list: ({ currentPage = 1, pageSize = 10, locale = 'ko' }: PaginationParams) =>
+    safeKey(
+      ...placeKeys.all,
+      'list',
+      `locale-${locale}`,
+      `page-${currentPage}`,
+      `size-${pageSize}`
+    ),
 
   // 북마크된 장소 목록
-  bookmarkList: ({ userId, currentPage = 1, pageSize = 12 }: logBookmarkListParams) =>
+  bookmarkList: ({
+    userId,
+    currentPage = 1,
+    pageSize = 12,
+    locale = 'ko',
+  }: logBookmarkListParams) =>
     safeKey(
       ...placeKeys.all,
       'bookmarks',
+      `locale-${locale}`,
       `user-${userId}`,
       `page-${currentPage}`,
       `size-${pageSize}`
     ),
 
   // 특정 장소 북마크 상태
-  bookmarkStatus: (placeId: string, userId: string) =>
-    safeKey(...placeKeys.all, 'bookmark-status', placeId, `user-${userId}`),
+  bookmarkStatus: (placeId: string, userId: string, locale: string) =>
+    safeKey(...placeKeys.all, 'bookmark-status', `locale-${locale}`, placeId, `user-${userId}`),
 };
 
 // ============================================================================
@@ -119,6 +148,7 @@ export const searchKeys = {
     safeKey(
       ...searchKeys.all,
       'results',
+      `locale-${params.locale ?? 'ko'}`,
       `page-${params.currentPage ?? 1}`,
       `size-${params.pageSize ?? 10}`,
       `sort-${params.sort ?? 'latest'}`,

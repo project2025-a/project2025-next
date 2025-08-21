@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-type TabType = 'myLog' | 'savedSpaces' | 'savedLog';
+export type TabType = 'myLog' | 'savedSpaces' | 'savedLog';
 
 interface ProfileTabStore {
   tab: TabType;

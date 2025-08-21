@@ -3,7 +3,7 @@ import { deleteLog } from '@/app/actions/log';
 import { HOME } from '@/constants/pathname';
 import { useRouter } from '@/i18n/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
 interface LogDeleteMutationProps {
@@ -11,11 +11,13 @@ interface LogDeleteMutationProps {
 }
 
 const useLogDeleteMutation = () => {
+  const locale = useLocale();
+
   const t = useTranslations('Toast.logDelete');
   const router = useRouter();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ logId }: LogDeleteMutationProps) => deleteLog(logId),
+    mutationFn: ({ logId }: LogDeleteMutationProps) => deleteLog(logId, locale),
     onSuccess: ({ success }) => {
       if (success) {
         toast.success(t('success'));

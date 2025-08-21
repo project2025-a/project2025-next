@@ -1,3 +1,4 @@
+import { ILocale } from '@/app/actions/log-register';
 import { StorageBucket } from '@/types/api/storage';
 import { QueryClient } from '@tanstack/react-query';
 import { clsx, type ClassValue } from 'clsx';
@@ -13,6 +14,14 @@ export function stringifyQueryKey(key: readonly (string | number | undefined)[])
   return key.map((k) =>
     typeof k === 'string' ? `s:${k}` : typeof k === 'number' ? `n:${k}` : 'u:'
   );
+}
+
+export function setLocaleTable(base: string, locale: ILocale) {
+  return locale === 'en' ? `${base}_en` : base;
+}
+
+export function getSchema(locale: ILocale) {
+  return locale === 'en' ? 'en' : 'public';
 }
 
 /* URLSearchParams로 변환해 API 요청용 쿼리스트링(query string) 으로 만들어주는 유틸 함수 */

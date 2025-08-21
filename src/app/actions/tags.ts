@@ -36,7 +36,8 @@ export const cacheTags = {
   followingList: (userId: string) => cacheTags.fromKey([...followKeys.following(userId), 'list']),
 
   /* 로그 */
-  logDetail: (logId: string) => cacheTags.fromKey([...logKeys.detail(logId), 'single']),
+  logDetail: (logId: string, locale: string = 'ko') =>
+    cacheTags.fromKey([...logKeys.detail(logId, locale), 'single']),
   logList: (params: LogsParams) => cacheTags.fromKey(logKeys.list(params)),
   logListByUser: (params: LogsParams) => cacheTags.fromKey(logKeys.listByUser(params)),
   logBookmarkList: (params: logBookmarkListParams) =>
@@ -44,7 +45,8 @@ export const cacheTags = {
   logMyList: (userId: string) => cacheTags.fromKey([...logKeys.all, 'myList', userId, 'list']),
 
   /* 장소 */
-  placeDetail: (placeId: string) => cacheTags.fromKey([...placeKeys.detail(placeId), 'single']),
+  placeDetail: (placeId: string, locale: string = 'ko') =>
+    cacheTags.fromKey([...placeKeys.detail(placeId, locale), 'single']),
   placeList: (params: PaginationParams) => cacheTags.fromKey(placeKeys.list(params)),
   placeBookmarkList: (params: logBookmarkListParams) =>
     cacheTags.fromKey(placeKeys.bookmarkList(params)),

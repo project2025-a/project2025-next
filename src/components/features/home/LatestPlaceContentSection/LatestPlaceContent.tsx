@@ -11,10 +11,11 @@ import {
 import CustomPagination from '@/components/common/CustomPagination';
 import FallbackMessage from '@/components/common/FallbackMessage';
 import { TitledSection } from '@/components/common/SectionBlock';
-import { ERROR_MESSAGES } from '@/constants/errorMessages';
+import { ERROR_MESSAGES, ERROR_MESSAGES_EN } from '@/constants/errorMessages';
 import usePlaces from '@/hooks/queries/place/usePlaces';
 import useQueryPagination from '@/hooks/useQueryPagination';
 import { Link } from '@/i18n/navigation';
+import { useLocale } from 'next-intl';
 import { useRef } from 'react';
 
 interface LatestPlaceContentProps {
@@ -22,17 +23,16 @@ interface LatestPlaceContentProps {
 }
 
 export default function LatestPlaceContent({ currentPage }: LatestPlaceContentProps) {
+  const locale = useLocale();
+  const M = locale === 'en' ? ERROR_MESSAGES_EN : ERROR_MESSAGES;
+
   const contentRef = useRef<HTMLElement | null>(null);
   const { handlePageChange } = useQueryPagination('placePage', currentPage, contentRef);
   const { data } = usePlaces({ currentPage, pageSize: 12, sort: 'latest' });
   if ((data && !data?.success) || data?.data.length === 0) {
     return (
       <FallbackMessage
-        message={
-          !data.success
-            ? ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR
-            : ERROR_MESSAGES.PLACE.LIST_EMPTY
-        }
+        message={!data.success ? M.COMMON.INTERNAL_SERVER_ERROR : M.PLACE.LIST_EMPTY}
         className="items-center"
       />
     );

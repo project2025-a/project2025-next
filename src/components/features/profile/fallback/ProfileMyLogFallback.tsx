@@ -1,6 +1,7 @@
 'use client';
 
 import { PlusIcon } from '@/components/common/Icons';
+import { REGISTER_PATHS } from '@/constants/pathname';
 import useUser from '@/hooks/queries/user/useUser';
 import { useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
@@ -16,7 +17,7 @@ export default function ProfileMyLogFallback() {
       router.push('/login');
       return;
     }
-    router.push('/register/log');
+    router.push(REGISTER_PATHS.MOOD);
   };
   return (
     <section className="flex w-full">

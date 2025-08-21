@@ -4,6 +4,7 @@ import { useProfileTabStore } from '@/stores/profileStore';
 import { BookmarkParams } from '@/types/api/common';
 import { PlacesBookmarkReseponse } from '@/types/api/place';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useLocale } from 'next-intl';
 
 async function fetchUsePlacesBookmark(params: BookmarkParams): Promise<PlacesBookmarkReseponse> {
   const query = toQueryString(params);
@@ -22,10 +23,12 @@ export default function usePlacesBookmark({
     currentPage,
     pageSize,
   };
+  const locale = useLocale();
+  const localeParams = { ...params, locale };
   const tab = useProfileTabStore((state) => state.tab);
   return useQuery({
-    queryKey: placeKeys.bookmarkList(params),
-    queryFn: () => fetchUsePlacesBookmark(params),
+    queryKey: placeKeys.bookmarkList(localeParams),
+    queryFn: () => fetchUsePlacesBookmark(localeParams),
     enabled: !!userId && tab === 'savedSpaces',
     placeholderData: keepPreviousData,
   });

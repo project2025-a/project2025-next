@@ -3,7 +3,7 @@ import { addPlacesToExistingLog } from '@/app/actions/log-register';
 import { AddedPlaceValues } from '@/types/log';
 import { uploadPlacesOptimized } from '@/utils/imageUpload';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
 interface AddPlaceMutationProps {
@@ -17,6 +17,8 @@ interface AddPlaceMutationProps {
 const useAddPlaceMutation = () => {
   const queryClient = useQueryClient();
   const tToast = useTranslations('Toast.logCreate');
+  const locale = useLocale();
+
   return useMutation({
     mutationFn: async ({ values, logId, existingOrderCount = 0 }: AddPlaceMutationProps) => {
       /* 장소 이미지 업로드 */
@@ -26,7 +28,11 @@ const useAddPlaceMutation = () => {
         existingOrderCount
       );
 
-      return await addPlacesToExistingLog(placeDataList, placeImageDataList);
+      return await addPlacesToExistingLog(
+        placeDataList,
+        placeImageDataList,
+        locale === 'en' ? 'en' : 'ko'
+      );
     },
     onSuccess: ({ success }) => {
       if (success) {

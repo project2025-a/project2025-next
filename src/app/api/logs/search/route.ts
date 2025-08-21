@@ -13,6 +13,7 @@ export async function GET(req: NextRequest) {
   const sigungu = searchParams.get('sigungu') || undefined;
   const currentPage = parseInt(searchParams.get('currentPage') || '1', 10);
   const pageSize = parseInt(searchParams.get('pageSize') || '12', 12);
+  const locale = searchParams.get('locale') || 'ko';
 
   try {
     const result = await fetchSearchLogs({
@@ -21,6 +22,7 @@ export async function GET(req: NextRequest) {
       sigungu,
       currentPage,
       pageSize,
+      locale,
     });
 
     revalidateTag(globalTags.searchAll);

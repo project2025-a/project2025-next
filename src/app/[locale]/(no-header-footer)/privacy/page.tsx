@@ -1,6 +1,11 @@
 import NoticeHeader from '@/components/features/notice/NoticeHeader';
 import PrivacyArticleSection from '@/components/features/privacy/PrivacyArticleSection';
+import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
+
+export const metadata: Metadata = {
+  title: 'privacy',
+};
 
 export default async function PrivacyPage() {
   const t = await getTranslations('PrivacyPolicyPage');

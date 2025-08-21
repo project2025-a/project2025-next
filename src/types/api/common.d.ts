@@ -31,6 +31,7 @@ export interface PaginationParams {
   currentPage?: number;
   pageSize?: number;
   sort?: Sort;
+  locale?: string;
 }
 
 export interface BookmarkResponse {

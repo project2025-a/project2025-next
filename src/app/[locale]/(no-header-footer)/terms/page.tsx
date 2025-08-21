@@ -1,6 +1,11 @@
 import NoticeHeader from '@/components/features/notice/NoticeHeader';
 import TermsArticleSection from '@/components/features/terms/TermsArticleSection';
+import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
+
+export const metadata: Metadata = {
+  title: 'terms',
+};
 
 export default async function TermsPage() {
   const t = await getTranslations('TermsPage');

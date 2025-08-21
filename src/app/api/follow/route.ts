@@ -1,6 +1,8 @@
+import { globalTags } from '@/app/actions/tags';
 import { getUser } from '@/app/actions/user';
 import { ERROR_CODES } from '@/constants/errorCode';
 import { ERROR_MESSAGES } from '@/constants/errorMessages';
+import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from 'prisma/prisma';
 
@@ -111,6 +113,9 @@ export async function POST(req: NextRequest) {
         following_id: userId,
       },
     });
+
+    revalidateTag(globalTags.userAll);
+
     return NextResponse.json({ success: true, isFollowing: true }, { status: 200 });
   } catch (_error) {
     console.error(_error);
@@ -159,6 +164,8 @@ export async function DELETE(req: NextRequest) {
     if (deleted.count === 0) {
       return NextResponse.json({ success: false, msg: '팔로우 상태가 아닙니다.' }, { status: 404 });
     }
+
+    revalidateTag(globalTags.userAll);
 
     return NextResponse.json({ success: true, isFollowing: false });
   } catch (error) {

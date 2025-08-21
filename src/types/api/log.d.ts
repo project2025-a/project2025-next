@@ -30,6 +30,7 @@ export interface logBookmarkListParams extends PaginationParams {
 export interface LogBookmarkCheckParams {
   logId: string;
   isBookmark: boolean;
+  locale?: string;
 }
 
 export interface LogBookmarkParams {

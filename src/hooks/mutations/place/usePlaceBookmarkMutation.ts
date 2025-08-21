@@ -3,12 +3,14 @@ import useUser from '@/hooks/queries/user/useUser';
 import { BookmarkResponse } from '@/types/api/common';
 import { PlaceBookmarkParams } from '@/types/api/place';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useLocale } from 'next-intl';
 
 async function fetchPlaceBookmark({
   placeId,
   isBookmark,
+  locale,
 }: PlaceBookmarkParams): Promise<BookmarkResponse> {
-  const res = await fetch(`/api/place/bookmark/check?placeId=${placeId}`, {
+  const res = await fetch(`/api/place/bookmark/check?placeId=${placeId}&locale=${locale}`, {
     method: isBookmark ? 'DELETE' : 'POST',
   });
   const data = await res.json();
@@ -16,22 +18,23 @@ async function fetchPlaceBookmark({
 }
 
 export default function usePlaceBookmarkMutation(onToggle?: (newStatus: boolean) => void) {
+  const locale = useLocale();
   const { data: user } = useUser();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: fetchPlaceBookmark,
+    mutationFn: (params: PlaceBookmarkParams) => fetchPlaceBookmark({ ...params, locale }),
     onMutate: async ({ placeId, isBookmark }: PlaceBookmarkParams) => {
       await queryClient.cancelQueries({
-        queryKey: placeKeys.bookmarkStatus(placeId, String(user?.user_id)),
+        queryKey: placeKeys.bookmarkStatus(placeId, String(user?.user_id), locale),
       });
 
       const previousData = queryClient.getQueryData(
-        placeKeys.bookmarkStatus(placeId, String(user?.user_id))
+        placeKeys.bookmarkStatus(placeId, String(user?.user_id), locale)
       );
 
       queryClient.setQueryData(
-        placeKeys.bookmarkStatus(placeId, String(user?.user_id)),
+        placeKeys.bookmarkStatus(placeId, String(user?.user_id), locale),
         (old: BookmarkResponse) => ({
           ...old,
           isBookmark: !isBookmark,
@@ -46,14 +49,14 @@ export default function usePlaceBookmarkMutation(onToggle?: (newStatus: boolean)
     onError: (_error, variables, context) => {
       if (context?.previousData) {
         queryClient.setQueryData(
-          placeKeys.bookmarkStatus(variables.placeId, String(user?.user_id)),
+          placeKeys.bookmarkStatus(variables.placeId, String(user?.user_id), locale),
           context.previousData
         );
       }
     },
     onSettled: (_data, _error, variables) => {
       queryClient.invalidateQueries({
-        queryKey: placeKeys.bookmarkStatus(variables.placeId, String(user?.user_id)),
+        queryKey: placeKeys.bookmarkStatus(variables.placeId, String(user?.user_id), locale),
       });
     },
   });

@@ -13,7 +13,7 @@ interface BookmarkPlace extends IBookmarkPlace {
   image: PlaceImage;
 }
 
-type Place = {
+export type Place = {
   place_id: string;
   log_id: string;
   name: string;
@@ -23,7 +23,7 @@ type Place = {
     nickname: string;
   };
   address: {
-    country: string
+    country: string;
     city: string;
     sigungu: string;
   };
@@ -44,6 +44,7 @@ export interface PlaceBookmarkListParmas extends PaginationParams {
 export interface PlaceBookmarkParams {
   placeId: string;
   isBookmark: boolean;
+  locale?: string;
 }
 
 //사진 메타에이터 장소 타입

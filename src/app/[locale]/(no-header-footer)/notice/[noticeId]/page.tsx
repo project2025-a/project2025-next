@@ -2,6 +2,11 @@ import NoticeDetailContent from '@/components/features/notice/notice-detail/Noti
 import NoticeDetailHeader from '@/components/features/notice/notice-detail/NoticeDetailHeader';
 import NoticeDetailInfo from '@/components/features/notice/notice-detail/NoticeDetailInfo';
 import { Separator } from '@/components/ui/separator';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'notice',
+};
 
 export default function NoticeDetailPage() {
   return (
