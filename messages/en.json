@@ -511,8 +511,8 @@
     "CountryPage": {
       "groupTitle": "Country",
       "options": {
-        "국내": "Domestic",
-        "국외": "Overseas"
+        "한국": "Korea",
+        "국제": "International"
       }
     },
     "CityPage": {
@@ -586,8 +586,8 @@
     }
   },
   "CountryType": {
-    "국내": "Domestic",
-    "국외": "Overseas"
+    "한국": "Korea",
+    "국제": "International"
   },
   "Category": {
     "레스토랑": "Restaurant",
