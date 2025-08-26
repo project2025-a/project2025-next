@@ -10,6 +10,7 @@ import { useFormContext } from 'react-hook-form';
 import PlaceDrawer from '../register/PlaceDrawer';
 import ImageSection from '../register/place-item/ImageSection';
 import TextSection from '../register/place-item/TextSection';
+import DaumPostcode from './DaumPostcode';
 
 interface PlaceFormProps {
   idx: number;
@@ -47,8 +48,10 @@ const PlaceForm = ({
     isEditPage ? (type === 'existing' ? 'places' : 'addedPlace') : 'places'
   ]?.[idx];
 
-  const tLog = useTranslations('Register.LogPage');
-  const tCategory = useTranslations('Category');
+  const translations = {
+    logPage: useTranslations('Register.LogPage'),
+    category: useTranslations('Category'),
+  };
 
   return (
     <div className="mt-6" data-place-index={globalIdx ?? idx}>
@@ -75,13 +78,13 @@ const PlaceForm = ({
           render={({ field }) => (
             <div className="space-y-1">
               <label className="block text-[14px] font-semibold text-black mt-1">
-                {tLog('placeNameLabel')}
+                {translations.logPage('placeNameLabel')}
                 <span className="text-error-500"> *</span>
               </label>
               <Input
                 {...field}
                 type="text"
-                placeholder={`${tLog('placeNamePlaceholder')}`}
+                placeholder={`${translations.logPage('placeNamePlaceholder')}`}
                 className={cn(
                   'block w-full px-4 py-5 rounded-[8px] bg-light-50 text-black',
                   'placeholder:text-light-300 !text-[14px] focus:outline-none',
@@ -100,22 +103,25 @@ const PlaceForm = ({
             render={({ field }) => (
               <div className="space-y-1">
                 <label className="block text-[14px] font-semibold text-black mt-1">
-                  {tLog('locationLabel')}
+                  {translations.logPage('locationLabel')}
                   <span className="text-error-500"> *</span>
                   <span className="text-[12px] font-normal text-light-300 ml-1.5">
-                    {tLog('placeNameNote')}
+                    {translations.logPage('placeNameNote')}
                   </span>
                 </label>
-                <Input
-                  {...field}
-                  type="text"
-                  placeholder={`${tLog('locationPlaceholder')}`}
-                  className={cn(
-                    'block w-full px-4 py-5 rounded-[8px] bg-light-50 text-black',
-                    'placeholder:text-light-300 !text-[14px]  focus:outline-none',
-                    placeErrors?.location && 'placeholder:text-error-500'
-                  )}
-                />
+                <div className="flex items-center gap-2">
+                  <Input
+                    {...field}
+                    type="text"
+                    placeholder={`${translations.logPage('locationPlaceholder')}`}
+                    className={cn(
+                      'block w-full px-4 py-5 rounded-[8px] bg-light-50 text-black',
+                      'placeholder:text-light-300 !text-[14px]  focus:outline-none',
+                      placeErrors?.location && 'placeholder:text-error-500'
+                    )}
+                  />
+                  <DaumPostcode onComplete={field.onChange} />
+                </div>
               </div>
             )}
           />
@@ -144,7 +150,7 @@ const PlaceForm = ({
                           showCategoryError && '!text-error-500 border-error-500'
                         )}
                       >
-                        {tCategory(category)}
+                        {translations.category(category)}
                       </ToggleGroupItem>
                     ))}
                   </ToggleGroup>
