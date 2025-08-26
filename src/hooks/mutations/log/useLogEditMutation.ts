@@ -14,14 +14,14 @@ interface LogEditMutationProps {
 }
 
 const useLogEditMutation = () => {
-  const t = useTranslations('Toast.logEdit');
-  const tToast = useTranslations('Toast.logCreate');
+  const translations = {
+    toastLogEdit: useTranslations('Toast.logEdit'),
+    toastLogCreate: useTranslations('Toast.logCreate'),
+  };
+
   const router = useRouter();
   const queryClient = useQueryClient();
   const clearTag = useLogCreationStore((state) => state.clearTag);
-
-  // const locale = useLocale();
-  // const normalizedLocale = locale === 'en' ? 'en' : 'ko';
 
   return useMutation({
     mutationFn: ({ formData, logId }: LogEditMutationProps) => updateLog(formData, logId),
@@ -39,15 +39,15 @@ const useLogEditMutation = () => {
         });
 
         router.replace(HOME);
-        toast.success(t('success'), {
-          description: tToast('redirect'),
+        toast.success(translations.toastLogEdit('success'), {
+          description: translations.toastLogCreate('redirect'),
         });
       }
     },
     onError: () => {
       trackLogEditEvent('cancel');
 
-      toast.error(t('error'));
+      toast.error(translations.toastLogEdit('error'));
     },
   });
 };

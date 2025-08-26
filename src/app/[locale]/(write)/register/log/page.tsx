@@ -83,14 +83,16 @@ const LogPage = () => {
   const { fields } = placesField;
 
   // 장소 관련 핸들러
-  const { handleAddNewPlace, handleDeletePlace, handleMovePlaceUp, handleMovePlaceDown } =
-    usePlacesHandlers<LogFormValues, 'places'>(placesField, INITIAL_PLACE, {
-      onAddError: () =>
-        toast.info(translations.toastPlaceDrawer('maxPlaceError'), { id: 'maxPlaceError' }),
-      onDeleteError: () =>
-        toast.error(translations.toastPlaceDrawer('minPlaceError'), { id: 'minPlaceError' }),
-      onReorder: (from, to) => scrollToPlaceAfterReorder(from, to > from ? 'down' : 'up'),
-    });
+  const { addPlace, deletePlace, movePlaceUp, movePlaceDown } = usePlacesHandlers<
+    LogFormValues,
+    'places'
+  >(placesField, INITIAL_PLACE, {
+    onAddError: () =>
+      toast.info(translations.toastPlaceDrawer('maxPlaceError'), { id: 'maxPlaceError' }),
+    onDeleteError: () =>
+      toast.error(translations.toastPlaceDrawer('minPlaceError'), { id: 'minPlaceError' }),
+    onReorder: (from, to) => scrollToPlaceAfterReorder(from, to > from ? 'down' : 'up'),
+  });
 
   const onSubmit = async (values: LogFormValues) => {
     trackLogCreateEvent('start');
@@ -99,7 +101,7 @@ const LogPage = () => {
 
   return (
     <div className="flex flex-col h-full">
-      <LogRegisterHeader onAddNewPlace={handleAddNewPlace} />
+      <LogRegisterHeader onAddNewPlace={addPlace} />
       <Form {...form}>
         <main className="grow bg-white pt-[66px]">
           <TitledInput />
@@ -108,14 +110,14 @@ const LogPage = () => {
               <PlaceForm
                 key={field.id}
                 idx={idx}
-                onDeletePlace={handleDeletePlace}
-                onMoveUpPlace={handleMovePlaceUp}
-                onMoveDownPlace={handleMovePlaceDown}
+                onDeletePlace={deletePlace}
+                onMoveUpPlace={movePlaceUp}
+                onMoveDownPlace={movePlaceDown}
               />
             ))}
           </div>
           <div className="flex justify-center mt-4 mb-4">
-            <AddPlaceButton handleAddNewPlace={handleAddNewPlace} />
+            <AddPlaceButton handleAddNewPlace={addPlace} />
           </div>
         </main>
       </Form>

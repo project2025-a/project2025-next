@@ -22,6 +22,11 @@ interface PlaceFormProps {
   onMoveDownPlace: (globalIdx: number) => void;
 }
 
+const getFieldName = (idx: number, type: 'existing' | 'added', isEdit: boolean) => {
+  if (!isEdit) return `places.${idx}`; // 등록 페이지
+  return type === 'existing' ? `places.${idx}` : `addedPlace.${idx}`; // 수정 페이지 (기존 : 신규)
+};
+
 const PlaceForm = ({
   idx,
   type = 'existing',
@@ -33,15 +38,10 @@ const PlaceForm = ({
 }: PlaceFormProps) => {
   const { control, watch, formState } = useFormContext();
   const [isChecked, setIsChecked] = useState(false);
+  const fieldName = getFieldName(idx, type, isEditPage);
 
-  const fieldName = isEditPage
-    ? type === 'existing'
-      ? `places.${idx}`
-      : `addedPlace.${idx}`
-    : `places.${idx}`;
+  const [locationValue, categoryValue] = watch([`${fieldName}.location`, `${fieldName}.category`]);
 
-  const locationValue = watch(`${fieldName}.location`);
-  const categoryValue = watch(`${fieldName}.category`);
   const showCategoryError = !!locationValue && !categoryValue;
 
   const placeErrors = (formState.errors as any)[
@@ -53,8 +53,10 @@ const PlaceForm = ({
     category: useTranslations('Category'),
   };
 
+  const currentIdx = globalIdx ?? idx;
+
   return (
-    <div className="mt-6" data-place-index={globalIdx ?? idx}>
+    <div className="mt-6" data-place-index={currentIdx}>
       <div className="flex justify-between">
         <span className="text-[14px] font-semibold text-black">
           {String((globalIdx ?? idx) + 1).padStart(2, '0')}
@@ -62,9 +64,9 @@ const PlaceForm = ({
         <PlaceDrawer
           isChecked={isChecked}
           setIsChecked={setIsChecked}
-          onDeletePlace={() => onDeletePlace(globalIdx ?? idx)}
-          onMoveUpPlace={() => onMoveUpPlace(globalIdx ?? idx)}
-          onMoveDownPlace={() => onMoveDownPlace(globalIdx ?? idx)}
+          onDeletePlace={() => onDeletePlace(currentIdx)}
+          onMoveUpPlace={() => onMoveUpPlace(currentIdx)}
+          onMoveDownPlace={() => onMoveDownPlace(currentIdx)}
         />
       </div>
 

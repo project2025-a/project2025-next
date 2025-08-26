@@ -8,7 +8,7 @@ export function usePlacesHandlers<
   TName extends ArrayPath<TFieldValues>
 >(
   fieldArray: UseFieldArrayReturn<TFieldValues, TName>,
-  initialField: TFieldValues[TName][number],
+  initialField: TFieldValues[TName][number] | null,
   options: {
     onAddError?: () => void;
     onDeleteError?: () => void;
@@ -18,16 +18,18 @@ export function usePlacesHandlers<
   const { fields, append, remove, swap } = fieldArray;
 
   /** 새 장소 추가 */
-  const handleAddNewPlace = useCallback(() => {
+  const addPlace = useCallback(() => {
     if (fields.length >= MAX_PLACE_COUNT) {
       options?.onAddError?.();
       return;
     }
-    append(initialField);
+    if (initialField) {
+      append(initialField);
+    }
   }, [fields.length, append, options, initialField]);
 
   /** 장소 삭제 */
-  const handleDeletePlace = useCallback(
+  const deletePlace = useCallback(
     (idx: number) => {
       if (fields.length <= 1) {
         options?.onDeleteError?.();
@@ -39,7 +41,7 @@ export function usePlacesHandlers<
   );
 
   /** 장소 위로 이동 */
-  const handleMovePlaceUp = useCallback(
+  const movePlaceUp = useCallback(
     (idx: number) => {
       if (idx <= 0) return;
       swap(idx, idx - 1);
@@ -49,7 +51,7 @@ export function usePlacesHandlers<
   );
 
   /** 장소 아래로 이동 */
-  const handleMovePlaceDown = useCallback(
+  const movePlaceDown = useCallback(
     (idx: number) => {
       if (idx >= fields.length - 1) return;
       swap(idx, idx + 1);
@@ -59,9 +61,9 @@ export function usePlacesHandlers<
   );
 
   return {
-    handleAddNewPlace,
-    handleDeletePlace,
-    handleMovePlaceUp,
-    handleMovePlaceDown,
+    addPlace,
+    deletePlace,
+    movePlaceUp,
+    movePlaceDown,
   };
 }
