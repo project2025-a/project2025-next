@@ -1,40 +1,41 @@
-import { scrollToPlaceAfterReorder } from '@/utils/scrollToElement';
-import { useTranslations } from 'next-intl';
 import { useCallback } from 'react';
-import { toast } from 'sonner';
+import { ArrayPath, FieldValues, UseFieldArrayReturn } from 'react-hook-form';
 
 const MAX_PLACE_COUNT = 10;
 
-export const INITIAL_PLACE = {
-  placeName: '',
-  category: '',
-  location: '',
-  description: '',
-  placeImages: [],
-};
-
-export function usePlacesHandlers(fields: any[], append: any, remove: any, swap: any) {
-  const t = useTranslations('Toast.PlaceDrawer');
+export function usePlacesHandlers<
+  TFieldValues extends FieldValues,
+  TName extends ArrayPath<TFieldValues>
+>(
+  fieldArray: UseFieldArrayReturn<TFieldValues, TName>,
+  initialField: TFieldValues[TName][number],
+  options: {
+    onAddError?: () => void;
+    onDeleteError?: () => void;
+    onReorder?: (from: number, to: number) => void;
+  }
+) {
+  const { fields, append, remove, swap } = fieldArray;
 
   /** 새 장소 추가 */
   const handleAddNewPlace = useCallback(() => {
     if (fields.length >= MAX_PLACE_COUNT) {
-      toast.info(t('maxPlaceError'));
+      options?.onAddError?.();
       return;
     }
-    append(INITIAL_PLACE);
-  }, [fields.length, append, t]);
+    append(initialField);
+  }, [fields.length, append, options, initialField]);
 
   /** 장소 삭제 */
   const handleDeletePlace = useCallback(
     (idx: number) => {
       if (fields.length <= 1) {
-        toast.error(t('minPlaceError'));
+        options?.onDeleteError?.();
         return;
       }
       remove(idx);
     },
-    [fields.length, remove, t]
+    [fields.length, remove, options]
   );
 
   /** 장소 위로 이동 */
@@ -42,9 +43,9 @@ export function usePlacesHandlers(fields: any[], append: any, remove: any, swap:
     (idx: number) => {
       if (idx <= 0) return;
       swap(idx, idx - 1);
-      scrollToPlaceAfterReorder(idx, 'up');
+      options?.onReorder?.(idx, idx - 1);
     },
-    [swap]
+    [swap, options]
   );
 
   /** 장소 아래로 이동 */
@@ -52,9 +53,9 @@ export function usePlacesHandlers(fields: any[], append: any, remove: any, swap:
     (idx: number) => {
       if (idx >= fields.length - 1) return;
       swap(idx, idx + 1);
-      scrollToPlaceAfterReorder(idx, 'down');
+      options?.onReorder?.(idx, idx + 1);
     },
-    [fields.length, swap]
+    [fields.length, swap, options]
   );
 
   return {
