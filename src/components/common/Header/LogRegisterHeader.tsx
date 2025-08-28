@@ -2,8 +2,8 @@
 
 import { useLogCreationStore } from '@/stores/logCreationStore';
 import { useTranslations } from 'next-intl';
+import AddPlaceButton from '../Button/AddPlaceButton';
 import BackButton from '../Button/BackButton';
-import { PlusSemiboldIcon } from '../Icons';
 
 interface LogRegisterHeaderProps {
   onAddNewPlace: () => void;
@@ -13,8 +13,10 @@ const LogRegisterHeader = ({ onAddNewPlace }: LogRegisterHeaderProps) => {
   const city = useLogCreationStore((state) => state.city);
   const sigungu = useLogCreationStore((state) => state.sigungu);
 
-  const tRegion = useTranslations('Region');
-  const tLog = useTranslations('Register.LogPage');
+  const translations = {
+    region: useTranslations('Region'),
+    logPage: useTranslations('Register.LogPage'),
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-[66px] bg-white">
@@ -23,19 +25,13 @@ const LogRegisterHeader = ({ onAddNewPlace }: LogRegisterHeaderProps) => {
           <BackButton plain />
           {city && sigungu ? (
             <p className="text-text-2xl font-bold">
-              {tRegion(city)} · {tRegion(sigungu)}
+              {translations.region(city)} · {translations.region(sigungu)}
             </p>
           ) : (
-            <p className="text-text-2xl font-bold">{tLog('loading')}</p>
+            <p className="text-text-2xl font-bold">{translations.logPage('loading')}</p>
           )}
         </div>
-        <button
-          className="flex items-center justify-center gap-1.5 font-semibold text-text-md bg-black text-white rounded-full px-3 py-1.5 hover:bg-light-900 hover:text-white"
-          onClick={onAddNewPlace}
-        >
-          <PlusSemiboldIcon />
-          {tLog('addPlace')}
-        </button>
+        <AddPlaceButton handleAddNewPlace={onAddNewPlace} className="px-3 py-1.5" />
       </div>
     </header>
   );

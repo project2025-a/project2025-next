@@ -1,9 +1,11 @@
 'use client';
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { createClient } from '@/lib/supabase/client';
 import { Tables } from '@/types/supabase';
 import { getStoragePublicImage } from '@/utils/getStorageImage';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Download } from 'lucide-react';
 import { useRef, useState } from 'react';
+import { toast } from 'sonner';
 import type { Swiper as SwiperType } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -15,6 +17,31 @@ import ImageWithLoader from './ImageWithLoader';
 interface PlaceImageSliderProps {
   placeImages: Tables<'place_images'>[];
 }
+
+const downloadImage = async (imagePath: string) => {
+  try {
+    const supabase = createClient();
+    const downloadPath = imagePath.replace('places/', ''); // 접두사 제거
+    const { data, error } = await supabase.storage.from('places').download(downloadPath); // blob
+
+    if (error || !data) {
+      toast.error('이미지 다운로드 실패');
+      return;
+    }
+    const extension = data.type.split('/')[1] || 'jpg';
+
+    const blobURL = URL.createObjectURL(data); // url을 파일 위치처럼 인식
+    const link = document.createElement('a'); // 가짜 태그
+    link.href = blobURL;
+    link.download = `image_${Date.now()}.${extension}`; // 다운로드 파일명
+
+    link.click(); // 클릭
+
+    URL.revokeObjectURL(blobURL); // 메모리 해제
+  } catch (err) {
+    console.error('이미지 다운로드 실패', err);
+  }
+};
 
 const PlaceImageSlider = ({ placeImages }: PlaceImageSliderProps) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -94,6 +121,13 @@ const PlaceImageSlider = ({ placeImages }: PlaceImageSliderProps) => {
             disabled={swiperRef.current?.isEnd}
           >
             <ChevronRight className="w-10 h-10 stroke-white" strokeWidth={1} />
+          </button>
+          <button
+            onClick={() => downloadImage(placeImages[selectedImageIndex].image_path)}
+            className="fixed top-[15px] right-[80px] z-[9999] text-white hover:scale-110 transition-transform"
+            aria-label="이미지 다운로드"
+          >
+            <Download className="w-6 h-6" strokeWidth={1} />
           </button>
           <DialogClose asChild>
             <button

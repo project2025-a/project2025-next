@@ -11,8 +11,8 @@ interface PageIntro {
 
 const PageIntro = ({ type }: PageIntro) => {
   const t = useTranslations('Register.TagIntro');
-  const country = useLogCreationStore((state) => state.country); // 국내 | 국외
-  const isDomestic = country === '국내';
+  const country = useLogCreationStore((state) => state.country); // 한국 | 국제
+  const isDomestic = country === '한국';
 
   let localeIntro: TagIntroKey = type;
 

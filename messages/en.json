@@ -11,8 +11,8 @@
       "success": "Upload completed successfully.",
       "redirect": "Redirecting to the page. Please wait a moment.",
       "error": "Upload failed. Please try again.",
-      "autoAddressSuccess": "Address has been automatically filled from photo's location.",
-      "autoAddressFailed": "Failed to retrieve address from location data.",
+      "autoAddressSuccess": "Address has been automatically set from the photo's location.",
+      "autoAddressFailed": "Failed to set address from location data.",
       "autoAddressSkipped": "Address already exists. Skipping auto input.",
       "locationMissing": "No place selected. Please try again.",
       "placeAdded": "Place added successfully.",
@@ -511,8 +511,8 @@
     "CountryPage": {
       "groupTitle": "Country",
       "options": {
-        "국내": "Domestic",
-        "국외": "Overseas"
+        "한국": "Korea",
+        "국제": "International"
       }
     },
     "CityPage": {
@@ -586,8 +586,8 @@
     }
   },
   "CountryType": {
-    "국내": "Domestic",
-    "국외": "Overseas"
+    "한국": "Korea",
+    "국제": "International"
   },
   "Category": {
     "레스토랑": "Restaurant",

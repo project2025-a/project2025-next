@@ -20,7 +20,7 @@ export const TAG_SETS = {
     '모임 · 동호회',
     '가성비 굿',
   ] as const,
-  country: ['국내', '국외'] as const,
+  country: ['한국', '국제'] as const,
   city: cityCategories || globalCategories,
   sigungu: [],
 };

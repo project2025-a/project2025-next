@@ -1,19 +1,19 @@
 'use client';
 
 import ConfirmDeleteDialog from '@/components/features/log/edit/ConfirmDeleteDialog';
+import { Tables } from '@/types/supabase';
 import { useTranslations } from 'next-intl';
+import AddPlaceButton from '../Button/AddPlaceButton';
 import BackButton from '../Button/BackButton';
-import { PlusSemiboldIcon } from '../Icons';
 
 interface LogEditHeaderProps {
-  city: string;
-  sigungu: string;
+  address: Pick<Tables<'address'>, 'country' | 'city' | 'sigungu'>;
   logTitle: string;
   logId: string;
   onAddNewPlace: () => void;
 }
 
-const LogEditHeader = ({ city, sigungu, logTitle, logId, onAddNewPlace }: LogEditHeaderProps) => {
+const LogEditHeader = ({ address, logTitle, logId, onAddNewPlace }: LogEditHeaderProps) => {
   const t = useTranslations();
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-[66px] bg-white">
@@ -21,24 +21,11 @@ const LogEditHeader = ({ city, sigungu, logTitle, logId, onAddNewPlace }: LogEdi
         <div className="flex items-center gap-2.5">
           <BackButton plain />
           <p className="text-text-2xl font-bold">
-            {t(`Region.${city}`)} · {t(`Region.${sigungu}`)}
+            {t(`Region.${address.city}`)} · {t(`Region.${address.sigungu}`)}
           </p>
         </div>
         <div className="flex items-center space-x-[14px] gap-2">
-          <button
-            className="flex items-center justify-center gap-1.5 font-semibold text-text-md bg-black text-white rounded-full px-3 py-1.5 hover:bg-light-900 hover:text-white"
-            onClick={onAddNewPlace}
-          >
-            <PlusSemiboldIcon />
-            {t('Register.LogPage.addPlace')}
-          </button>
-          {/* <Button
-            variant="ghost"
-            className="font-bold text-text-md !text-light-300 px-0 hover:!text-light-400 hover:!bg-transparent"
-            onClick={onAddNewPlace}
-          >
-            {t('Register.LogPage.addPlace')}
-          </Button> */}
+          <AddPlaceButton handleAddNewPlace={onAddNewPlace} className="px-3 py-1.5" />
           <ConfirmDeleteDialog logTitle={logTitle} logId={logId} />
         </div>
       </div>

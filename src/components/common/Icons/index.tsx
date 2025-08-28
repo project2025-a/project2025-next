@@ -8,7 +8,13 @@ interface IconProps {
 /* Header */
 export const SearchIcon = ({ className }: IconProps) => {
   return (
-    <Image src="/icons/search.svg" width={20} height={20} alt="검색 아이콘" className={className} />
+    <Image
+      src="/icons/search.svg"
+      width={20}
+      height={20}
+      alt="검색 아이콘"
+      className={cn('w-5 h-5', className)}
+    />
   );
 };
 export const SearchBlackIcon = ({ className }: IconProps) => {
@@ -18,7 +24,7 @@ export const SearchBlackIcon = ({ className }: IconProps) => {
       width={20}
       height={20}
       alt="검색 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };
@@ -29,7 +35,7 @@ export const GlobeIcon = ({ className }: IconProps) => {
       width={20}
       height={20}
       alt="다국어 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };
@@ -40,18 +46,30 @@ export const GlobeBlackIcon = ({ className }: IconProps) => {
       width={20}
       height={20}
       alt="다국어 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };
 export const AlertIcon = ({ className }: IconProps) => {
   return (
-    <Image src="/icons/alert.svg" width={20} height={20} alt="알림 아이콘" className={className} />
+    <Image
+      src="/icons/alert.svg"
+      width={20}
+      height={20}
+      alt="알림 아이콘"
+      className={cn('w-5 h-5', className)}
+    />
   );
 };
 export const UserIcon = ({ className }: IconProps) => {
   return (
-    <Image src="/icons/user.svg" width={20} height={20} alt="유저 아이콘" className={className} />
+    <Image
+      src="/icons/user.svg"
+      width={20}
+      height={20}
+      alt="유저 아이콘"
+      className={cn('w-5 h-5', className)}
+    />
   );
 };
 export const UserBlackIcon = ({ className }: IconProps) => {
@@ -61,7 +79,7 @@ export const UserBlackIcon = ({ className }: IconProps) => {
       width={20}
       height={20}
       alt="유저 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };
@@ -88,7 +106,7 @@ export const HeadPhoneIcon = ({ className }: IconProps) => {
       width={14}
       height={15}
       alt="헤드폰 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };
@@ -100,7 +118,7 @@ export const LogoutIcon = ({ className }: IconProps) => {
       width={14}
       height={15}
       alt="헤드폰 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };
@@ -112,14 +130,20 @@ export const AddImageIcon = ({ className }: IconProps) => {
       width={16}
       height={16}
       alt="로그 작성 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };
 
 export const PlusIcon = ({ className }: IconProps) => {
   return (
-    <Image src="/icons/Plus.svg" width={14} height={15} alt="더하기 아이콘" className={className} />
+    <Image
+      src="/icons/Plus.svg"
+      width={14}
+      height={15}
+      alt="더하기 아이콘"
+      className={cn('w-5 h-5', className)}
+    />
   );
 };
 
@@ -130,7 +154,7 @@ export const PlusSemiboldIcon = ({ className }: IconProps) => {
       width={16}
       height={16}
       alt="더하기 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };
@@ -138,7 +162,13 @@ export const PlusSemiboldIcon = ({ className }: IconProps) => {
 /* register header */
 export const HomeIcon = ({ className }: IconProps) => {
   return (
-    <Image src="/icons/home.svg" width={20} height={20} alt="홈 아이콘" className={className} />
+    <Image
+      src="/icons/home.svg"
+      width={20}
+      height={20}
+      alt="홈 아이콘"
+      className={cn('w-5 h-5', className)}
+    />
   );
 };
 
@@ -151,13 +181,19 @@ export const AddCameraIcon = ({ className }: IconProps) => {
       width={20}
       height={20}
       alt="이미지 추가 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };
 export const MapIcon = ({ className }: IconProps) => {
   return (
-    <Image src="/icons/map.svg" width={20} height={20} alt="지도 아이콘" className={className} />
+    <Image
+      src="/icons/map.svg"
+      width={20}
+      height={20}
+      alt="지도 아이콘"
+      className={cn('w-5 h-5', className)}
+    />
   );
 };
 export const LocationIcon = ({ className }: IconProps) => {
@@ -167,7 +203,7 @@ export const LocationIcon = ({ className }: IconProps) => {
       width={20}
       height={20}
       alt="장소 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };
@@ -178,7 +214,7 @@ export const WhiteLocationIcon = ({ className }: IconProps) => {
       width={20}
       height={20}
       alt="장소 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };
@@ -189,7 +225,7 @@ export const CircleIcon = ({ className }: IconProps) => {
       width={20}
       height={20}
       alt="장소 타겟 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };
@@ -200,7 +236,7 @@ export const CheckedCircleIcon = ({ className }: IconProps) => {
       width={20}
       height={20}
       alt="선택된 장소 타켓 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };
@@ -211,7 +247,7 @@ export const TrashIcon = ({ className }: IconProps) => {
       width={20}
       height={20}
       alt="휴지통 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };
@@ -222,7 +258,7 @@ export const TableIcon = ({ className }: IconProps) => {
       width={20}
       height={20}
       alt="테이블 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };
@@ -246,7 +282,13 @@ export const BookMarkIcon = ({ className }: IconProps) => {
 };
 export const ShareIcon = ({ className }: IconProps) => {
   return (
-    <Image src="/icons/share.svg" width={24} height={24} alt="공유 아이콘" className={className} />
+    <Image
+      src="/icons/share.svg"
+      width={24}
+      height={24}
+      alt="공유 아이콘"
+      className={cn('w-5 h-5', className)}
+    />
   );
 };
 export const PenIcon = ({ className }: IconProps) => {
@@ -256,7 +298,7 @@ export const PenIcon = ({ className }: IconProps) => {
       width={24}
       height={24}
       alt="로그 수정 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };
@@ -267,7 +309,7 @@ export const PenBlackIcon = ({ className }: IconProps) => {
       width={24}
       height={24}
       alt="로그 수정 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };
@@ -280,7 +322,7 @@ export const ArrowLeftIcon = ({ className }: IconProps) => {
       width={18}
       height={18}
       alt="왼쪽 화살표 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };
@@ -291,7 +333,7 @@ export const ArrowUpIcon = ({ className }: IconProps) => {
       width={20}
       height={20}
       alt="위쪽 화살표 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };
@@ -302,7 +344,7 @@ export const ArrowDownIcon = ({ className }: IconProps) => {
       width={20}
       height={20}
       alt="아래쪽 화살표 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };
@@ -313,7 +355,7 @@ export const ArrowUpRightIcon = ({ className }: IconProps) => {
       width={20}
       height={20}
       alt="오른쪽 위 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };
@@ -326,7 +368,7 @@ export const XInputClearIcon = ({ className }: IconProps) => {
       width={20}
       height={20}
       alt="입력창 클리어 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };
@@ -337,7 +379,7 @@ export const XRemovePlaceImageIcon = ({ className }: IconProps) => {
       width={20}
       height={20}
       alt="장소 이미지 삭제 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };
@@ -348,7 +390,7 @@ export const XRemoveThumbnailIcon = ({ className }: IconProps) => {
       width={20}
       height={20}
       alt="썸네일 이미지 삭제 아이콘"
-      className={className}
+      className={cn('w-5 h-5', className)}
     />
   );
 };

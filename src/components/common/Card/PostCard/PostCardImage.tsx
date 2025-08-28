@@ -24,7 +24,7 @@ function PostCardImage({ imageUrl, author, className, vertical }: PostCardImageP
             src={getStoragePublicImage(imageUrl)}
             alt="Post Thumbnail"
             fill
-            sizes="100vw"
+            sizes="(max-width: 768px) 100vw, 324px"
             className="object-cover object-center"
           />
           <div className="absolute inset-0 card-id-gradient" />

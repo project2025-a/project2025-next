@@ -2,7 +2,7 @@
 
 import { getAddressFromCoords } from '@/utils/getAddressFromCoords';
 import exifr from 'exifr';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
 interface UseGpsAddressExtractionProps {
@@ -17,6 +17,7 @@ export const useGpsAddressExtraction = ({
   onSkip,
 }: UseGpsAddressExtractionProps) => {
   const locale = useLocale();
+  const tToast = useTranslations('Toast.logCreate');
 
   const extractGpsAndSetAddress = async (files: File[]) => {
     // 이미 주소가 있으면 GPS 추출 건너뛰기
@@ -41,10 +42,12 @@ export const useGpsAddressExtraction = ({
 
           if (address.success) {
             onAddressSet(address.data.address);
-            toast.success('GPS 정보로 주소가 자동 설정되었습니다.');
+            toast.success(tToast('autoAddressSuccess'), {
+              id: 'gps-address-extraction',
+            });
             break; // 첫 번째 성공한 GPS 정보로 주소 설정 후 종료
           } else {
-            toast.warning('GPS 정보로 주소를 찾을 수 없습니다.');
+            toast.warning(tToast('autoAddressFailed'), { id: 'gps-address-extraction' });
           }
         }
       } catch (err) {
@@ -54,7 +57,7 @@ export const useGpsAddressExtraction = ({
 
     // GPS 정보가 없는 경우 토스트 표시
     if (!hasGpsInfo) {
-      toast.info('이미지에서 GPS 정보를 찾을 수 없습니다.');
+      toast.info(tToast('autoAddressFailed'), { id: 'gps-address-extraction' });
     }
   };
 

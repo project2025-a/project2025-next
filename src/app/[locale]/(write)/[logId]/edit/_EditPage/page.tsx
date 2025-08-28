@@ -5,30 +5,35 @@ import ConfirmRegistrationDialog from '@/components/features/log/register/Confir
 import MultiTagGroup from '@/components/features/log/register/tags/MultiTagGroup';
 import TitledInput from '@/components/features/log/register/TitledInput';
 import { Form } from '@/components/ui/form';
+import { INITIAL_PLACE } from '@/constants/logConstants';
 import useAddPlaceMutation from '@/hooks/mutations/log/useAddPlaceMutation';
 import useLogEditMutation from '@/hooks/mutations/log/useLogEditMutation';
-import { usePlacesHandlers } from '@/hooks/usePlacesHandlers';
+import { usePlacesFieldArray } from '@/hooks/usePlacesFieldArray';
 import { trackLogEditEvent } from '@/lib/analytics';
 import { LogEditFormSchema } from '@/lib/zod/logSchema';
 import { useLogCreationStore } from '@/stores/logCreationStore';
 import { DetailLog } from '@/types/api/log';
 import { LogEditFormValues } from '@/types/log';
 import { createFormData } from '@/utils/formatLog';
+import { scrollToPlaceAfterReorder } from '@/utils/scrollToElement';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { extractDirtyValues, isImageOrderChanged, isOrderChanged, pickDirtyFields } from './utils';
 
 const LogEditPage = ({ logData }: { logData: DetailLog }) => {
+  const translations = {
+    logEditPage: useTranslations('LogEditPage'),
+    toastPlaceDrawer: useTranslations('Toast.PlaceDrawer'),
+    toastLogEdit: useTranslations('Toast.logEdit'),
+  };
   const router = useRouter();
   const { mutateAsync: editMutate, isPending: editIsPending } = useLogEditMutation();
   const { mutateAsync: addPlaceMutate, isPending: addPlaceIsPending } = useAddPlaceMutation();
-  const t = useTranslations('LogEditPage');
-  const tDrawer = useTranslations('Toast.PlaceDrawer');
-  const tLogEdit = useTranslations('Toast.logEdit');
+
   const { title, place: places, log_tag, address, log_id } = logData;
   const initializeTags = useLogCreationStore((state) => state.initializeTags);
   const initialMoodTags = log_tag.filter((t) => t.category === 'mood').map((t) => t.tag);
@@ -65,27 +70,21 @@ const LogEditPage = ({ logData }: { logData: DetailLog }) => {
   }, []);
 
   //---------- 기존 장소 ----------
-  const {
-    fields: existingPlaces,
-    remove: existingPlaceRemove,
-    swap: existingPlaceSwap,
-    append: existingPlaceAppend,
-  } = useFieldArray<LogEditFormValues>({
+  const existingPlacesArray = useFieldArray<LogEditFormValues>({
     control: form.control,
     name: 'places',
   });
 
-  // 기존 장소 drawer용
+  // 기존 장소 drawer용 (추가 없음)
   const {
-    handleDeletePlace: handleDeleteExistingPlace,
-    handleMovePlaceUp: handleMoveExistingPlaceUp,
-    handleMovePlaceDown: handleMoveExistingPlaceDown,
-  } = usePlacesHandlers(
-    existingPlaces,
-    existingPlaceAppend,
-    existingPlaceRemove,
-    existingPlaceSwap
-  );
+    deletePlace: deleteExistingPlace,
+    movePlaceUp: moveExistingPlaceUp,
+    movePlaceDown: moveExistingPlaceDown,
+  } = usePlacesFieldArray(existingPlacesArray, null, {
+    onDeleteError: () =>
+      toast.error(translations.toastPlaceDrawer('minPlaceError'), { id: 'minPlaceError' }),
+    onReorder: (from, to) => scrollToPlaceAfterReorder(from, to > from ? 'down' : 'up'),
+  });
 
   // 기존 장소 수정 처리 함수
   const handleEditExistingPlaces = async (dirtyValues: Partial<LogEditFormValues>) => {
@@ -119,29 +118,44 @@ const LogEditPage = ({ logData }: { logData: DetailLog }) => {
   };
 
   //---------- 새 장소 ------------
-  const {
-    fields: addedPlaces,
-    append: addedPlaceAppend,
-    remove: addedPlaceRemove,
-    swap: addedPlaceSwap,
-  } = useFieldArray<LogEditFormValues>({
+  const newPlacesArray = useFieldArray<LogEditFormValues>({
     control: form.control,
     name: 'addedPlace',
   });
 
   // 새 장소 drawer용
   const {
-    handleAddNewPlace,
-    handleDeletePlace: handleDeleteNewPlace,
-    handleMovePlaceUp: handleMoveNewPlaceUp,
-    handleMovePlaceDown: handleMoveNewPlaceDown,
-  } = usePlacesHandlers(addedPlaces, addedPlaceAppend, addedPlaceRemove, addedPlaceSwap);
+    addPlace: addNewPlace,
+    deletePlace: deleteNewPlace,
+    movePlaceUp: moveNewPlaceUp,
+    movePlaceDown: moveNewPlaceDown,
+  } = usePlacesFieldArray(newPlacesArray, INITIAL_PLACE, {
+    onAddError: () => {
+      toast.error(translations.toastPlaceDrawer('maxPlaceCountError'), {
+        description: translations.toastPlaceDrawer('maxPlaceCountErrorDesc'),
+      });
+    },
+    onReorder: (from, to) => scrollToPlaceAfterReorder(from, to > from ? 'down' : 'up'),
+  });
 
   // 기존 장소와 새 장소를 합쳐서 렌더링
-  const allPlaces = [
-    ...existingPlaces.map((field, idx) => ({ ...field, type: 'existing', originalIdx: idx })),
-    ...addedPlaces.map((field, idx) => ({ ...field, type: 'added', originalIdx: idx })),
-  ];
+  const allPlaces = useMemo(
+    () => [
+      ...existingPlacesArray.fields.map((field, idx) => ({
+        ...field,
+        type: 'existing',
+        originalIdx: idx,
+      })),
+      ...newPlacesArray.fields.map((field, idx) => ({
+        ...field,
+        type: 'added',
+        originalIdx: idx,
+      })),
+    ],
+    [existingPlacesArray.fields, newPlacesArray.fields]
+  );
+
+  // console.log('>>>>allPlaces', allPlaces);
 
   // 새 장소 추가
   const handleAddNewPlaces = async (newPlaces: LogEditFormValues['addedPlace']) => {
@@ -156,40 +170,36 @@ const LogEditPage = ({ logData }: { logData: DetailLog }) => {
     });
   };
 
-  // 전체 장소(globalIdx) 기준 위로 이동
-  const handleMovePlaceUpGlobal = (globalIdx: number) => {
-    if (globalIdx <= 0) return;
-    const currentPlace = allPlaces[globalIdx];
-    const prevPlace = allPlaces[globalIdx - 1];
-    if (currentPlace.type !== prevPlace.type) {
-      toast.error(tDrawer('orderTypeError'), {
-        description: tDrawer('orderTypeErrorDesc'),
-      });
-      return;
-    }
-    if (currentPlace.type === 'existing') {
-      handleMoveExistingPlaceUp(currentPlace.originalIdx); // 기존 장소
-    } else {
-      handleMoveNewPlaceUp(currentPlace.originalIdx); // 새 장소
-    }
-  };
+  // 기존 장소 vs 신규 장소 구분해서 순서 이동
+  const movePlaceGlobal = (globalIdx: number, direction: 'up' | 'down') => {
+    const lastIdx = allPlaces.length - 1;
 
-  // 전체 장소(globalIdx) 기준 아래로 이동
-  const handleMovePlaceDownGlobal = (globalIdx: number) => {
-    if (globalIdx >= allPlaces.length - 1) return;
+    // 에라 발생 범위
+    if (direction === 'up' && globalIdx <= 0) return;
+    if (direction === 'down' && globalIdx >= lastIdx) return;
+
     const currentPlace = allPlaces[globalIdx];
-    const nextPlace = allPlaces[globalIdx + 1];
-    if (currentPlace.type !== nextPlace.type) {
-      toast.error(tDrawer('orderTypeError'), {
-        description: tDrawer('orderTypeErrorDesc'),
+    const adjacentPlace = direction === 'up' ? allPlaces[globalIdx - 1] : allPlaces[globalIdx + 1];
+
+    // 타입이 다르면 이동 불가
+    if (currentPlace.type !== adjacentPlace.type) {
+      toast.error(translations.toastPlaceDrawer('orderTypeError'), {
+        description: translations.toastPlaceDrawer('orderTypeErrorDesc'),
       });
       return;
     }
-    if (currentPlace.type === 'existing') {
-      handleMoveExistingPlaceDown(currentPlace.originalIdx);
-    } else {
-      handleMoveNewPlaceDown(currentPlace.originalIdx);
-    }
+
+    // 이동 함수 선택 (기존 장소 vs 신규 장소)
+    const moveFn =
+      currentPlace.type === 'existing'
+        ? direction === 'up'
+          ? moveExistingPlaceUp
+          : moveExistingPlaceDown
+        : direction === 'up'
+        ? moveNewPlaceUp
+        : moveNewPlaceDown;
+
+    moveFn(currentPlace.originalIdx);
   };
 
   /* 변경 상태 확인 */
@@ -227,42 +237,37 @@ const LogEditPage = ({ logData }: { logData: DetailLog }) => {
     else if (hasFieldChanges || hasOrderChanged || isImageOrderChanged) {
       await handleEditExistingPlaces(dirtyValues);
     } else {
-      toast.info(tLogEdit('noChanges'), {
-        description: tLogEdit('noChangesDesc'),
+      toast.info(translations.toastLogEdit('noChanges'), {
+        description: translations.toastLogEdit('noChangesDesc'),
       });
       router.back();
     }
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-full">
       <LogEditHeader
-        city={address[0].city}
-        sigungu={address[0].sigungu}
+        address={address[0]}
         logTitle={title}
         logId={log_id}
-        onAddNewPlace={handleAddNewPlace}
+        onAddNewPlace={addNewPlace}
       />
       <Form {...form}>
         <main className="grow bg-white pt-[66px]">
           <TitledInput />
           <div className="flex flex-col gap-4">
-            {allPlaces.map((field, globalIdx) => {
-              return (
-                <PlaceForm
-                  key={field.id}
-                  idx={field.originalIdx} // 각 필드별 인덱스
-                  type={field.type as 'existing' | 'added'}
-                  isEditPage
-                  globalIdx={globalIdx} // 전체 장소 배열에서의 인덱스
-                  onDeletePlace={
-                    field.type === 'existing' ? handleDeleteExistingPlace : handleDeleteNewPlace
-                  }
-                  onMoveUpPlace={handleMovePlaceUpGlobal}
-                  onMoveDownPlace={handleMovePlaceDownGlobal}
-                />
-              );
-            })}
+            {allPlaces.map((field, globalIdx) => (
+              <PlaceForm
+                key={field.id}
+                idx={field.originalIdx} // 각 필드별 인덱스
+                type={field.type as 'existing' | 'added'}
+                isEditPage
+                globalIdx={globalIdx} // 전체 장소 배열에서의 인덱스
+                onDeletePlace={field.type === 'existing' ? deleteExistingPlace : deleteNewPlace}
+                onMoveUpPlace={() => movePlaceGlobal(globalIdx, 'up')}
+                onMoveDownPlace={() => movePlaceGlobal(globalIdx, 'down')}
+              />
+            ))}
           </div>
         </main>
         <>
@@ -271,7 +276,7 @@ const LogEditPage = ({ logData }: { logData: DetailLog }) => {
             name="tags.mood"
             render={({ field }) => (
               <MultiTagGroup
-                title={t('tag.mood')}
+                title={translations.logEditPage('tag.mood')}
                 type="mood"
                 value={field.value}
                 onChange={field.onChange}
@@ -283,7 +288,7 @@ const LogEditPage = ({ logData }: { logData: DetailLog }) => {
             name="tags.activity"
             render={({ field }) => (
               <MultiTagGroup
-                title={t('tag.activity')}
+                title={translations.logEditPage('tag.activity')}
                 type="activity"
                 value={field.value}
                 onChange={field.onChange}
@@ -295,7 +300,7 @@ const LogEditPage = ({ logData }: { logData: DetailLog }) => {
 
       {/* footer */}
       <div className="text-text-sm w-full h-9 rounded-md flex items-center justify-center bg-error-50 text-red-500 my-2.5 py-2">
-        {t('warning.imagePolicy')}
+        {translations.logEditPage('warning.imagePolicy')}
       </div>
 
       <ConfirmRegistrationDialog

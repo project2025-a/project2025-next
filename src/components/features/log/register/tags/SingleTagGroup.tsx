@@ -24,7 +24,7 @@ const SingleTagGroup = ({ title, type }: SingleTagGroupProps) => {
   const setSingleTag = useLogCreationStore((state) => state.setSingleTag);
   const selectedCity = useLogCreationStore((state) => state['city']);
   const selectedCountry = useLogCreationStore((state) => state['country']);
-  const isDomestic = selectedCountry === '국내';
+  const isDomestic = selectedCountry === '한국';
 
   // 선택한 값에 따라 다음 태그가 결정
   const tags = useMemo(() => {
@@ -128,7 +128,7 @@ export default SingleTagGroup;
 //   const setSingleTag = useLogCreationStore((state) => state.setSingleTag);
 //   const selectedCity = useLogCreationStore((state) => state['city']);
 //   const selectedCountry = useLogCreationStore((state) => state['country']);
-//   const isDomestic = selectedCountry === '국내';
+//   const isDomestic = selectedCountry === '한국';
 
 //   // 선택한 값에 따라 다음 태그가 결정
 //   const tags = useMemo(() => {
