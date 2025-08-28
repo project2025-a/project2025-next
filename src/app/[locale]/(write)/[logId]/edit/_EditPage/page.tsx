@@ -5,9 +5,10 @@ import ConfirmRegistrationDialog from '@/components/features/log/register/Confir
 import MultiTagGroup from '@/components/features/log/register/tags/MultiTagGroup';
 import TitledInput from '@/components/features/log/register/TitledInput';
 import { Form } from '@/components/ui/form';
+import { INITIAL_PLACE } from '@/constants/logConstants';
 import useAddPlaceMutation from '@/hooks/mutations/log/useAddPlaceMutation';
 import useLogEditMutation from '@/hooks/mutations/log/useLogEditMutation';
-import { usePlacesHandlers } from '@/hooks/usePlacesHandlers';
+import { usePlacesFieldArray } from '@/hooks/usePlacesFieldArray';
 import { trackLogEditEvent } from '@/lib/analytics';
 import { LogEditFormSchema } from '@/lib/zod/logSchema';
 import { useLogCreationStore } from '@/stores/logCreationStore';
@@ -21,7 +22,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { INITIAL_PLACE } from '../../../register/log/page';
 import { extractDirtyValues, isImageOrderChanged, isOrderChanged, pickDirtyFields } from './utils';
 
 const LogEditPage = ({ logData }: { logData: DetailLog }) => {
@@ -80,7 +80,7 @@ const LogEditPage = ({ logData }: { logData: DetailLog }) => {
     deletePlace: deleteExistingPlace,
     movePlaceUp: moveExistingPlaceUp,
     movePlaceDown: moveExistingPlaceDown,
-  } = usePlacesHandlers(existingPlacesArray, null, {
+  } = usePlacesFieldArray(existingPlacesArray, null, {
     onDeleteError: () =>
       toast.error(translations.toastPlaceDrawer('minPlaceError'), { id: 'minPlaceError' }),
     onReorder: (from, to) => scrollToPlaceAfterReorder(from, to > from ? 'down' : 'up'),
@@ -129,7 +129,7 @@ const LogEditPage = ({ logData }: { logData: DetailLog }) => {
     deletePlace: deleteNewPlace,
     movePlaceUp: moveNewPlaceUp,
     movePlaceDown: moveNewPlaceDown,
-  } = usePlacesHandlers(newPlacesArray, INITIAL_PLACE, {
+  } = usePlacesFieldArray(newPlacesArray, INITIAL_PLACE, {
     onAddError: () => {
       toast.error(translations.toastPlaceDrawer('maxPlaceCountError'), {
         description: translations.toastPlaceDrawer('maxPlaceCountErrorDesc'),
@@ -155,7 +155,7 @@ const LogEditPage = ({ logData }: { logData: DetailLog }) => {
     [existingPlacesArray.fields, newPlacesArray.fields]
   );
 
-  console.log('>>>>allPlaces', allPlaces);
+  // console.log('>>>>allPlaces', allPlaces);
 
   // 새 장소 추가
   const handleAddNewPlaces = async (newPlaces: LogEditFormValues['addedPlace']) => {

@@ -6,9 +6,10 @@ import PlaceForm from '@/components/features/log/common/PlaceForm';
 import ConfirmRegistrationDialog from '@/components/features/log/register/ConfirmRegistrationDialog';
 import TitledInput from '@/components/features/log/register/TitledInput';
 import { Form } from '@/components/ui/form';
+import { INITIAL_PLACE } from '@/constants/logConstants';
 import { REGISTER_PATHS } from '@/constants/pathname';
 import useLogCreateMutation from '@/hooks/mutations/log/useLogCreateMutation';
-import { usePlacesHandlers } from '@/hooks/usePlacesHandlers';
+import { usePlacesFieldArray } from '@/hooks/usePlacesFieldArray';
 import { useRouter } from '@/i18n/navigation';
 import { trackLogCreateEvent } from '@/lib/analytics';
 import { LogFormSchema } from '@/lib/zod/logSchema';
@@ -20,14 +21,6 @@ import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-
-export const INITIAL_PLACE: LogFormValues['places'][number] = {
-  placeName: '',
-  category: '',
-  location: '',
-  description: '',
-  placeImages: [],
-};
 
 const LogPage = () => {
   const translations = {
@@ -83,7 +76,7 @@ const LogPage = () => {
   const { fields } = placesField;
 
   // 장소 관련 핸들러
-  const { addPlace, deletePlace, movePlaceUp, movePlaceDown } = usePlacesHandlers<
+  const { addPlace, deletePlace, movePlaceUp, movePlaceDown } = usePlacesFieldArray<
     LogFormValues,
     'places'
   >(placesField, INITIAL_PLACE, {

@@ -3,7 +3,7 @@ import { ArrayPath, FieldValues, UseFieldArrayReturn } from 'react-hook-form';
 
 const MAX_PLACE_COUNT = 10;
 
-export function usePlacesHandlers<
+export function usePlacesFieldArray<
   TFieldValues extends FieldValues,
   TName extends ArrayPath<TFieldValues>
 >(
