@@ -13,7 +13,7 @@ import { usePlacesFieldArray } from '@/hooks/usePlacesFieldArray';
 import { useRouter } from '@/i18n/navigation';
 import { trackLogCreateEvent } from '@/lib/analytics';
 import { LogFormSchema } from '@/lib/zod/logSchema';
-import { useLogCreationStore } from '@/stores/logCreationStore';
+import { useLogTagStore } from '@/stores/logTagStore';
 import { LogFormValues } from '@/types/log';
 import { scrollToPlaceAfterReorder } from '@/utils/scrollToElement';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -31,13 +31,13 @@ const LogPage = () => {
   const router = useRouter();
 
   const { mutate, isPending } = useLogCreateMutation();
-  const country = useLogCreationStore((state) => state.country);
-  const city = useLogCreationStore((state) => state.city);
-  const sigungu = useLogCreationStore((state) => state.sigungu);
-  const mood = useLogCreationStore((state) => state.mood);
-  const activity = useLogCreationStore((state) => state.activity);
-  const hydrated = useLogCreationStore((state) => state.hydrated);
-  const submitted = useLogCreationStore((state) => state.submitted); // 로그 등록 완료 여부(로그 제출 중에 태그가 초기화되는 것을 방지)
+  const country = useLogTagStore((state) => state.country);
+  const city = useLogTagStore((state) => state.city);
+  const sigungu = useLogTagStore((state) => state.sigungu);
+  const mood = useLogTagStore((state) => state.mood);
+  const activity = useLogTagStore((state) => state.activity);
+  const hydrated = useLogTagStore((state) => state.hydrated);
+  const submitted = useLogTagStore((state) => state.submitted); // 로그 등록 완료 여부(로그 제출 중에 태그가 초기화되는 것을 방지)
 
   const form = useForm<LogFormValues>({
     resolver: zodResolver(LogFormSchema),

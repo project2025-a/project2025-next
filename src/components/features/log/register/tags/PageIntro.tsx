@@ -1,6 +1,6 @@
 'use client';
 
-import { TagKeys, useLogCreationStore } from '@/stores/logCreationStore';
+import { TagKeys, useLogTagStore } from '@/stores/logTagStore';
 import { useTranslations } from 'next-intl';
 
 type TagIntroKey = 'mood' | 'country' | 'city' | 'sigungu' | 'area';
@@ -11,7 +11,7 @@ interface PageIntro {
 
 const PageIntro = ({ type }: PageIntro) => {
   const t = useTranslations('Register.TagIntro');
-  const country = useLogCreationStore((state) => state.country); // 한국 | 국제
+  const country = useLogTagStore((state) => state.country); // 한국 | 국제
   const isDomestic = country === '한국';
 
   let localeIntro: TagIntroKey = type;

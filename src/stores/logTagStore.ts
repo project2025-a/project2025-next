@@ -25,7 +25,7 @@ type TagActions = {
   setSubmitted: (value: boolean) => void;
 };
 
-type LogCreationStoreType = TagStates & TagActions;
+type LogTagStoreType = TagStates & TagActions;
 
 const initialState: TagStates = {
   mood: [] as string[],
@@ -37,22 +37,25 @@ const initialState: TagStates = {
   submitted: false,
 };
 
-export const useLogCreationStore = create<LogCreationStoreType>()(
+// 각 태그별 최대 개수
+const MAX_MULTI_TAGS: Record<MultiKeys, number> = {
+  mood: 6,
+  activity: 10,
+};
+
+export const useLogTagStore = create<LogTagStoreType>()(
   persist(
     devtools(
       immer((set, get) => ({
         ...initialState,
-        hydrated: false,
         toggleMultiTag: (key, tag) => {
           const state = get();
           const tags = state[key];
           const isSelected = tags.includes(tag);
 
-          // mood와 activity 각각의 최대 개수 제한
-          if (!isSelected) {
-            if (key === 'mood' && state.mood.length >= 6) return;
-            if (key === 'activity' && state.activity.length >= 10) return;
-          }
+          // 각 태그별 최대 개수 제한
+          if (!isSelected && tags.length >= MAX_MULTI_TAGS[key]) return;
+
           set((state) => {
             state[key] = isSelected ? tags.filter((t) => t != tag) : [...tags, tag];
           });
@@ -79,10 +82,10 @@ export const useLogCreationStore = create<LogCreationStoreType>()(
             state.submitted = value;
           }),
       })),
-      { name: 'logCreation' }
+      { name: 'logTagStore' }
     ),
     {
-      name: 'logCreationStore',
+      name: 'logTagStore',
       partialize: (state) => ({
         mood: state.mood,
         activity: state.activity,
@@ -90,12 +93,8 @@ export const useLogCreationStore = create<LogCreationStoreType>()(
         city: state.city,
         sigungu: state.sigungu,
       }),
-      onRehydrateStorage: () => {
-        // console.log('hydration starts');
-
-        return (state, error) => {
-          if (!error && state) state.hydrated = true;
-        };
+      onRehydrateStorage: () => (state, error) => {
+        if (!error && state) state.hydrated = true;
       },
     }
   )

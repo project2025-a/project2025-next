@@ -11,7 +11,7 @@ import useLogEditMutation from '@/hooks/mutations/log/useLogEditMutation';
 import { usePlacesFieldArray } from '@/hooks/usePlacesFieldArray';
 import { trackLogEditEvent } from '@/lib/analytics';
 import { LogEditFormSchema } from '@/lib/zod/logSchema';
-import { useLogCreationStore } from '@/stores/logCreationStore';
+import { useLogTagStore } from '@/stores/logTagStore';
 import { DetailLog } from '@/types/api/log';
 import { LogEditFormValues } from '@/types/log';
 import { createFormData } from '@/utils/formatLog';
@@ -35,7 +35,7 @@ const LogEditPage = ({ logData }: { logData: DetailLog }) => {
   const { mutateAsync: addPlaceMutate, isPending: addPlaceIsPending } = useAddPlaceMutation();
 
   const { title, place: places, log_tag, address, log_id } = logData;
-  const initializeTags = useLogCreationStore((state) => state.initializeTags);
+  const initializeTags = useLogTagStore((state) => state.initializeTags);
   const initialMoodTags = log_tag.filter((t) => t.category === 'mood').map((t) => t.tag);
   const initialActivityTags = log_tag.filter((t) => t.category === 'activity').map((t) => t.tag);
 

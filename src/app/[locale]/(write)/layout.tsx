@@ -1,9 +1,9 @@
 'use client';
-import { useLogCreationStore } from '@/stores/logCreationStore';
+import { useLogTagStore } from '@/stores/logTagStore';
 import { PropsWithChildren, useEffect } from 'react';
 
 const WriteLayout = ({ children }: PropsWithChildren) => {
-  const clearTag = useLogCreationStore((state) => state.clearTag);
+  const clearTag = useLogTagStore((state) => state.clearTag);
   useEffect(() => {
     return () => clearTag();
     // eslint-disable-next-line react-hooks/exhaustive-deps

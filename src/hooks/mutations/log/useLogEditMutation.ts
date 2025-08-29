@@ -3,7 +3,7 @@ import { updateLog } from '@/app/actions/log-update';
 import { HOME } from '@/constants/pathname';
 import { useRouter } from '@/i18n/navigation';
 import { trackLogEditEvent } from '@/lib/analytics';
-import { useLogCreationStore } from '@/stores/logCreationStore';
+import { useLogTagStore } from '@/stores/logTagStore';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
@@ -21,7 +21,7 @@ const useLogEditMutation = () => {
 
   const router = useRouter();
   const queryClient = useQueryClient();
-  const clearTag = useLogCreationStore((state) => state.clearTag);
+  const clearTag = useLogTagStore((state) => state.clearTag);
 
   return useMutation({
     mutationFn: ({ formData, logId }: LogEditMutationProps) => updateLog(formData, logId),

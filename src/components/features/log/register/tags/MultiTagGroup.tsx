@@ -1,6 +1,6 @@
 'use client';
 import { TAG_SETS } from '@/constants/tagData';
-import { TagKeys, useLogCreationStore } from '@/stores/logCreationStore';
+import { TagKeys, useLogTagStore } from '@/stores/logTagStore';
 import TagGroup from './TagGroup';
 
 interface MultiTagGroupProps {
@@ -11,8 +11,8 @@ interface MultiTagGroupProps {
 }
 
 const MultiTagGroup = ({ title, type, value, onChange }: MultiTagGroupProps) => {
-  const storeSelectedTags = useLogCreationStore((state) => state[type]);
-  const toggleMultiTag = useLogCreationStore((state) => state.toggleMultiTag);
+  const storeSelectedTags = useLogTagStore((state) => state[type]);
+  const toggleMultiTag = useLogTagStore((state) => state.toggleMultiTag);
 
   // value가 있으면 폼 제어, 없으면 store 사용
   const selectedTags = value ?? storeSelectedTags;

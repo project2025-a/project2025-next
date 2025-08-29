@@ -4,7 +4,7 @@ import { HOME } from '@/constants/pathname';
 import useUser from '@/hooks/queries/user/useUser';
 import { useRouter } from '@/i18n/navigation';
 import { trackLogCreateEvent } from '@/lib/analytics';
-import { useLogCreationStore } from '@/stores/logCreationStore';
+import { useLogTagStore } from '@/stores/logTagStore';
 import { LogFormValues, NewPlace, NewPlaceImage } from '@/types/log';
 import { uploadPlacesOptimized } from '@/utils/imageUpload';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -28,9 +28,9 @@ const useLogCreateMutation = () => {
 
   const router = useRouter();
   const queryClient = useQueryClient();
-  const clearTag = useLogCreationStore((state) => state.clearTag);
+  const clearTag = useLogTagStore((state) => state.clearTag);
   const t = useTranslations('Toast.logCreate');
-  const setSubmitted = useLogCreationStore((state) => state.setSubmitted);
+  const setSubmitted = useLogTagStore((state) => state.setSubmitted);
   //일단 유저 아이디 추가
   const me = useUser();
 

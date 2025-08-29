@@ -1,6 +1,6 @@
 'use client';
 
-import { useLogCreationStore } from '@/stores/logCreationStore';
+import { useLogTagStore } from '@/stores/logTagStore';
 import { useTranslations } from 'next-intl';
 import AddPlaceButton from '../Button/AddPlaceButton';
 import BackButton from '../Button/BackButton';
@@ -10,8 +10,8 @@ interface LogRegisterHeaderProps {
 }
 
 const LogRegisterHeader = ({ onAddNewPlace }: LogRegisterHeaderProps) => {
-  const city = useLogCreationStore((state) => state.city);
-  const sigungu = useLogCreationStore((state) => state.sigungu);
+  const city = useLogTagStore((state) => state.city);
+  const sigungu = useLogTagStore((state) => state.sigungu);
 
   const translations = {
     region: useTranslations('Region'),

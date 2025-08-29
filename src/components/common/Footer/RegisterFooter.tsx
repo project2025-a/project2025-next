@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { REGISTER_PATHS } from '@/constants/pathname';
 import { Link, useRouter } from '@/i18n/navigation';
-import { TagKeys, useLogCreationStore } from '@/stores/logCreationStore';
+import { TagKeys, useLogTagStore } from '@/stores/logTagStore';
 import { RegisterPath } from '@/types/path';
 import { useTranslations } from 'next-intl';
 interface RegisterFooterProps {
@@ -30,7 +30,7 @@ const RegisterFooter = ({ tagTargets, nextPath, delayBtn }: RegisterFooterProps)
   const t = useTranslations('Register.Footer');
   const handleClick = () => router.push(nextPath);
 
-  const allSelected = useLogCreationStore((state) => checkAllSelected(state, tagTargets));
+  const allSelected = useLogTagStore((state) => checkAllSelected(state, tagTargets));
   const isDisabled = !allSelected;
 
   return (
