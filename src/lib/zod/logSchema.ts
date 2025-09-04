@@ -15,10 +15,12 @@ export const placeSchema = z.object({
     .min(1, '장소 최소 1장은 필수입니다.'),
 });
 
-export const tagsSchema = z.object({
-  mood: z.array(z.string()).optional(),
-  activity: z.array(z.string()).optional(),
-});
+export const tagsSchema = z
+  .object({
+    mood: z.array(z.string()).optional(),
+    activity: z.array(z.string()).optional(),
+  })
+  .optional();
 
 export const addressSchema = z.object({
   country: z.string(),
@@ -30,12 +32,14 @@ export const AddedPlaceSchema = placeSchema; // 로그 수정 시 새로 추가�
 
 export const LogFormSchema = z.object({
   logTitle: z.string().max(30).min(1, '로그 제목은 필수입니다.'),
-  // thumbnail: imageFileSchema,
-  // logDescription: z.string(),
   places: z
     .array(placeSchema)
     .min(1, '장소 1개 이상은 필수입니다.')
     .max(10, '장소는 최대 10개 입니다.'),
+});
+
+// zustand로 관리하여 확장으로 변경
+export const LogCreateSchema = LogFormSchema.extend({
   tags: tagsSchema,
   address: addressSchema,
 });
