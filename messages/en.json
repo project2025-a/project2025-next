@@ -527,7 +527,8 @@
     },
     "Footer": {
       "next": "Next",
-      "skip": "Do it later"
+      "register": "Register Log",
+      "skip": "Skip Register/Edit later"
     },
     "LogPage": {
       "loading": "Loading...",
@@ -538,7 +539,7 @@
       "contentPlaceholder": "Enter the content. (Max 500 characters)",
       "placeNameLabel": "Place Name",
       "placeNameNote": "Place Name Note",
-      "placeNamePlaceholder": "장소명을 입력하세요",
+      "placeNamePlaceholder": "e.g. National Museum of Modern and Contemporary Art, Seoul",
       "locationLabel": "Address",
       "locationPlaceholder": "Enter the location.",
       "uploadImage": "Upload Image",
