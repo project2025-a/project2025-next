@@ -3,7 +3,7 @@
 import { LogCreatePayload } from '@/hooks/mutations/log/useLogCreateMutation';
 import { createClient } from '@/lib/supabase/server';
 import { getSchema, setLocaleTable } from '@/lib/utils';
-import { LogFormValues, NewAddress, NewLog, NewPlace, NewPlaceImage } from '@/types/log';
+import { LogCreateValues, NewAddress, NewLog, NewPlace, NewPlaceImage } from '@/types/log';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { revalidateTag } from 'next/cache';
 import { globalTags } from './tags';
@@ -138,7 +138,7 @@ async function insertLogData(supabase: SupabaseClient, logData: NewLog, locale: 
 // 태그 데이터 삽입
 async function insertTagsData(
   supabase: SupabaseClient,
-  tags: LogFormValues['tags'],
+  tags: LogCreateValues['tags'],
   logId: LogCreatePayload['logId'],
   locale: ILocale
 ) {
@@ -160,7 +160,7 @@ async function insertTagsData(
 // 주소 데이터 삽입
 async function insertAddressData(
   supabase: SupabaseClient,
-  address: LogFormValues['address'],
+  address: LogCreateValues['address'],
   logId: LogCreatePayload['logId'],
   locale: ILocale
 ) {
