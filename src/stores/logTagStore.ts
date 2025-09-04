@@ -15,14 +15,12 @@ type TagStates = {
   city: string;
   sigungu: string;
   hydrated: boolean;
-  submitted: boolean; // 로그 등록 완료 여부(로그 제출 중에 태그가 초기화되는 것을 방지)
 };
 type TagActions = {
   toggleMultiTag: (key: MultiKeys, tag: string) => void;
   setSingleTag: (key: SingleKeys, tag: string) => void;
   clearTag: () => void;
   initializeTags: (payload: Pick<TagStates, 'mood' | 'activity'>) => void;
-  setSubmitted: (value: boolean) => void;
 };
 
 type LogTagStoreType = TagStates & TagActions;
@@ -34,7 +32,6 @@ const initialState: TagStates = {
   city: '',
   sigungu: '',
   hydrated: false,
-  submitted: false,
 };
 
 // 각 태그별 최대 개수
@@ -76,10 +73,6 @@ export const useLogTagStore = create<LogTagStoreType>()(
           set((state) => {
             state.mood = payload.mood;
             state.activity = payload.activity;
-          }),
-        setSubmitted: (value) =>
-          set((state) => {
-            state.submitted = value;
           }),
       })),
       { name: 'logTagStore' }
