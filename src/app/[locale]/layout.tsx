@@ -16,7 +16,8 @@ export const metadata: Metadata = {
     default: 'Placesurf',
     template: '%s | Placesurf',
   },
-  description: '어디 갈지 고민될 땐? 감각있는 Placesurf에서 리얼 코스를 만나보세요!',
+  description:
+    '좋아하는 카페, 자주 걷는 골목, 우연히 찾은 전시. 당신의 취향이 머무는 장소로 하루를 그려보세요. 누군가의 여행, 데이트, 소중한 기념일이 될 수 있어요.',
   alternates: {
     canonical: '/',
     languages: { ko: '/ko', en: '/en' }, // i18n hreflang
