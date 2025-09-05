@@ -29,12 +29,10 @@ const useExistingPlaces = ({
       return;
     }
 
-    const { id: deletedPlaceId } = oldPlacesArray.fields[idx]; // 삭제할 장소 id
-    console.log('deletedPlaceId', deletedPlaceId);
+    const { placeId: deletedPlaceId } = oldPlacesArray.fields[idx]; // 삭제할 장소 id
     oldPlacesArray.remove(idx); // 필드에서 지우고
     form.setValue('deletedPlace', [...form.getValues('deletedPlace'), deletedPlaceId]); // 삭제된 장소 id 추가
     console.log('deletedPlace', form.getValues('deletedPlace'));
-
     // 삭제된 장소 id
   };
   const moveExistingPlaceUp = (idx: number) => {
@@ -70,6 +68,7 @@ const useExistingPlaces = ({
           ...(dirtyPlace?.placeImages && { placeImages: dirtyPlace.placeImages }),
         };
       }),
+      deletedPlace: form.getValues('deletedPlace'),
     };
 
     console.log('>>>>>>>>>>>>>>>>>>>>>>>>> patchedDirtyValues', patchedDirtyValues);

@@ -24,7 +24,7 @@ export async function updateLog(formData: FormData, logId: string, localeArg?: I
     const locale: ILocale = _raw === 'en' ? 'en' : 'ko';
 
     const parseResult = parseFormData<LogEditFormValues>(formData);
-
+    console.log('parseResult111', parseResult);
     await performDatabaseUpdates(supabase, logId, parseResult, locale);
 
     // Storage 작업은 DB 작업 후 수행

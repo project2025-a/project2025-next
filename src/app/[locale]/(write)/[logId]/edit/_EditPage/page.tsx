@@ -8,7 +8,6 @@ import { getChangeStatus } from '@/components/features/log/edit/utils/utils';
 import ConfirmRegistrationDialog from '@/components/features/log/register/ConfirmRegistrationDialog';
 import MultiTagGroup from '@/components/features/log/register/tags/MultiTagGroup';
 import TitledInput from '@/components/features/log/register/TitledInput';
-import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { HOME } from '@/constants/pathname';
 import { useRouter } from '@/i18n/navigation';
@@ -47,18 +46,15 @@ const LogEditPage = ({ logData }: { logData: DetailLog }) => {
   const onSubmit = async (values: LogEditFormValues) => {
     trackLogEditEvent('start');
 
-    console.log('변경된 값', form.formState.dirtyFields); // 텍스트 변경은 파악함 (제목, 장소(이미지 제외), 태그), 장소 추가 >>  이미지 순서, 장소 순서, 삭제 장소, 파악안됨
+    // console.log('변경된 값', form.formState.dirtyFields); // 텍스트 변경은 파악함 (제목, 장소(이미지 제외), 태그), 장소 추가 >>  이미지 순서, 장소 순서, 삭제 장소, 파악안됨
 
     // 변경 상태 확인
     const { hasAddedPlace, hasDeletedPlace, extractedDirtyValues } = getChangeStatus(form);
     const hasDirtyValues = Object.keys(extractedDirtyValues).length > 0;
+
+    console.log('hasDirtyValues', hasDirtyValues);
+
     try {
-      if (!hasDirtyValues) {
-        toast.info(translations.toastLogEdit('noChanges'), {
-          id: 'noChanges',
-        });
-        return;
-      }
       if (hasAddedPlace) {
         // 새로운 장소 추가
         await handleAddNewPlaces(values.addedPlace, places.length);
@@ -67,6 +63,11 @@ const LogEditPage = ({ logData }: { logData: DetailLog }) => {
         console.log('실행할예정', extractedDirtyValues);
         // 기존 장소 수정
         await editExistingPlaces(extractedDirtyValues);
+      } else {
+        toast.info(translations.toastLogEdit('noChanges'), {
+          id: 'noChanges',
+        });
+        return;
       }
     } finally {
       router.push(HOME);
@@ -132,7 +133,6 @@ const LogEditPage = ({ logData }: { logData: DetailLog }) => {
         {translations.logEditPage('warning.imagePolicy')}
       </div>
 
-      <Button onClick={() => console.log(form.getValues())}>test</Button>
       <ConfirmRegistrationDialog
         edit
         disabled={!form.formState.isValid || form.formState.isSubmitting}
