@@ -21,8 +21,7 @@
     "logEdit": {
       "success": "Log updated successfully.",
       "error": "Failed to update the log.",
-      "noChanges": "No changes have been made.",
-      "noChangesDesc": "Returning to the previous page."
+      "noChanges": "No changes have been made."
     },
     "logDelete": {
       "success": "Log deleted successfully.",
