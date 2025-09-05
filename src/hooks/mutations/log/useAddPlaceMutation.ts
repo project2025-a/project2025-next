@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 interface AddPlaceMutationProps {
   values: AddedPlaceValues[];
   logId: string;
-  existingOrderCount?: number; // 기존 장소 + 1 부터 번호 매기기 위해
+  existingOldPlacesCount?: number; // 기존 장소 + 1 부터 번호 매기기 위해
 }
 
 // 이미지 업로드
@@ -20,12 +20,12 @@ const useAddPlaceMutation = () => {
   const locale = useLocale();
 
   return useMutation({
-    mutationFn: async ({ values, logId, existingOrderCount = 0 }: AddPlaceMutationProps) => {
+    mutationFn: async ({ values, logId, existingOldPlacesCount = 0 }: AddPlaceMutationProps) => {
       /* 장소 이미지 업로드 */
       const { placeDataList, placeImageDataList } = await uploadPlacesOptimized(
         values,
         logId,
-        existingOrderCount
+        existingOldPlacesCount
       );
 
       return await addPlacesToExistingLog(

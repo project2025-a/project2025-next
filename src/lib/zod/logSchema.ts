@@ -53,7 +53,7 @@ export const SavedPlaceImageSchema = z.object({
 });
 
 export const EditPlaceSchema = placeSchema.extend({
-  id: z.string(),
+  placeId: z.string(),
   order: z.number(),
   placeImages: z.array(SavedPlaceImageSchema).min(1, '장소 최소 1장은 필수입니다.'),
 });
