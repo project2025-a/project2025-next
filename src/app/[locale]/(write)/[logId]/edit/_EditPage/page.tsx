@@ -81,7 +81,7 @@ const LogEditPage = ({ logData }: { logData: DetailLog }) => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col">
       <LogEditHeader
         address={address[0]}
         logTitle={title}

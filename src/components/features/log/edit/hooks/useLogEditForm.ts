@@ -1,6 +1,7 @@
 import { LogEditFormSchema } from '@/lib/zod/logSchema';
 import { DetailLog } from '@/types/api/log';
 import { LogEditFormValues } from '@/types/log';
+import { scrollToPlaceAfterReorder } from '@/utils/scrollToElement';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
@@ -117,6 +118,8 @@ const useLogEditForm = ({ logData }: UseLogEditFormProps) => {
         : moveNewPlaceDown;
 
     moveFn(currentPlace.originalIdx);
+
+    scrollToPlaceAfterReorder(globalIdx, direction);
   };
 
   return { form, oldPlacesArray, newPlacesArray, allPlaces, movePlaceGlobal };
