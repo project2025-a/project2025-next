@@ -33,7 +33,7 @@ const LogPage = () => {
   const router = useRouter();
   const { form } = useLogForm();
 
-  // 주소 누락 시, 주소 등록 페이지로 이동 (주소 페이지 뒤로 옮길거라서 임시 주석 처리)
+  // 주소 누락 시, 주소 등록 페이지로 이동
   useEffect(() => {
     const isAddressMissing = !country || !city || !sigungu;
 
@@ -41,7 +41,8 @@ const LogPage = () => {
       toast.error(translations.toastLogCreate('locationMissing'));
       router.replace(REGISTER_PATHS.LOCATION);
     }
-  }, [form, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [country, city, sigungu]);
 
   // 장소 필드
   const placesField = useFieldArray<LogFormValues>({

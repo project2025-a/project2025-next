@@ -36,7 +36,9 @@ export const useLogFormStore = create<LogFormStoreType>()(
       name: 'logFormStore',
       partialize: (state) => ({ formValues: state.formValues }),
       onRehydrateStorage: () => (state, error) => {
-        if (!error && state) state.hydrated = true;
+        if (!error && state) {
+          state.hydrated = true;
+        }
       },
     }
   )
