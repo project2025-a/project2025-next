@@ -21,8 +21,7 @@
     "logEdit": {
       "success": "로그 수정이 완료되었습니다.",
       "error": "로그 수정에 실패했습니다.",
-      "noChanges": "변경 사항이 없습니다.",
-      "noChangesDesc": "이전 페이지로 돌아갑니다."
+      "noChanges": "변경 사항이 없습니다."
     },
     "logDelete": {
       "success": "로그가 삭제되었습니다.",
@@ -527,7 +526,8 @@
     },
     "Footer": {
       "next": "다음",
-      "skip": "다음에 하기"
+      "register": "로그 등록",
+      "skip": "나중에 등록/수정 가능합니다."
     },
     "LogPage": {
       "loading": "로딩중...",
@@ -538,7 +538,7 @@
       "contentPlaceholder": "내용을 입력해주세요. (최대 500자)",
       "placeNameLabel": "장소명",
       "placeNameNote": "사진에 위치 정보가 있으면 자동 입력돼요.",
-      "placeNamePlaceholder": "예) 국립현대미술관 서울 ",
+      "placeNamePlaceholder": "예) 국립현대미술관 서울",
       "locationLabel": "주소",
       "locationPlaceholder": "예) 서울 종로구 삼청로 30",
       "uploadImage": "이미지 업로드",

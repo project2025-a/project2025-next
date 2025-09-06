@@ -15,17 +15,15 @@ type TagStates = {
   city: string;
   sigungu: string;
   hydrated: boolean;
-  submitted: boolean; // 로그 등록 완료 여부(로그 제출 중에 태그가 초기화되는 것을 방지)
 };
 type TagActions = {
   toggleMultiTag: (key: MultiKeys, tag: string) => void;
   setSingleTag: (key: SingleKeys, tag: string) => void;
   clearTag: () => void;
   initializeTags: (payload: Pick<TagStates, 'mood' | 'activity'>) => void;
-  setSubmitted: (value: boolean) => void;
 };
 
-type LogCreationStoreType = TagStates & TagActions;
+type LogTagStoreType = TagStates & TagActions;
 
 const initialState: TagStates = {
   mood: [] as string[],
@@ -34,25 +32,27 @@ const initialState: TagStates = {
   city: '',
   sigungu: '',
   hydrated: false,
-  submitted: false,
 };
 
-export const useLogCreationStore = create<LogCreationStoreType>()(
+// 각 태그별 최대 개수
+const MAX_MULTI_TAGS: Record<MultiKeys, number> = {
+  mood: 6,
+  activity: 10,
+};
+
+export const useLogTagStore = create<LogTagStoreType>()(
   persist(
     devtools(
       immer((set, get) => ({
         ...initialState,
-        hydrated: false,
         toggleMultiTag: (key, tag) => {
           const state = get();
           const tags = state[key];
           const isSelected = tags.includes(tag);
 
-          // mood와 activity 각각의 최대 개수 제한
-          if (!isSelected) {
-            if (key === 'mood' && state.mood.length >= 6) return;
-            if (key === 'activity' && state.activity.length >= 10) return;
-          }
+          // 각 태그별 최대 개수 제한
+          if (!isSelected && tags.length >= MAX_MULTI_TAGS[key]) return;
+
           set((state) => {
             state[key] = isSelected ? tags.filter((t) => t != tag) : [...tags, tag];
           });
@@ -74,15 +74,11 @@ export const useLogCreationStore = create<LogCreationStoreType>()(
             state.mood = payload.mood;
             state.activity = payload.activity;
           }),
-        setSubmitted: (value) =>
-          set((state) => {
-            state.submitted = value;
-          }),
       })),
-      { name: 'logCreation' }
+      { name: 'logTagStore' }
     ),
     {
-      name: 'logCreationStore',
+      name: 'logTagStore',
       partialize: (state) => ({
         mood: state.mood,
         activity: state.activity,
@@ -90,12 +86,8 @@ export const useLogCreationStore = create<LogCreationStoreType>()(
         city: state.city,
         sigungu: state.sigungu,
       }),
-      onRehydrateStorage: () => {
-        // console.log('hydration starts');
-
-        return (state, error) => {
-          if (!error && state) state.hydrated = true;
-        };
+      onRehydrateStorage: () => (state, error) => {
+        if (!error && state) state.hydrated = true;
       },
     }
   )

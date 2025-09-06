@@ -7,7 +7,7 @@ import {
   globalRegions,
 } from '@/constants/cityData';
 import { TAG_SETS } from '@/constants/tagData';
-import { TagKeys, useLogCreationStore } from '@/stores/logCreationStore';
+import { TagKeys, useLogTagStore } from '@/stores/logTagStore';
 import { useTranslations } from 'next-intl';
 import { useCallback, useMemo } from 'react';
 import { PAGE_TAG_INTROS } from './constant';
@@ -20,10 +20,10 @@ interface SingleTagGroupProps {
 
 const SingleTagGroup = ({ title, type }: SingleTagGroupProps) => {
   const t = useTranslations();
-  const selectedTag = useLogCreationStore((state) => state[type]);
-  const setSingleTag = useLogCreationStore((state) => state.setSingleTag);
-  const selectedCity = useLogCreationStore((state) => state['city']);
-  const selectedCountry = useLogCreationStore((state) => state['country']);
+  const selectedTag = useLogTagStore((state) => state[type]);
+  const setSingleTag = useLogTagStore((state) => state.setSingleTag);
+  const selectedCity = useLogTagStore((state) => state['city']);
+  const selectedCountry = useLogTagStore((state) => state['country']);
   const isDomestic = selectedCountry === '한국';
 
   // 선택한 값에 따라 다음 태그가 결정
@@ -111,7 +111,7 @@ export default SingleTagGroup;
 //   globalRegions,
 // } from '@/constants/cityData';
 // import { TAG_SETS } from '@/constants/tagData';
-// import { TagKeys, useLogCreationStore } from '@/stores/logCreationStore';
+// import { TagKeys, useLogTagStore } from '@/stores/logCreationStore';
 // import { useTranslations } from 'next-intl';
 // import { useCallback, useMemo } from 'react';
 // import { PAGE_TAG_INTROS } from './constant';
@@ -124,10 +124,10 @@ export default SingleTagGroup;
 
 // const SingleTagGroup = ({ title, type }: SingleTagGroupProps) => {
 //   const t = useTranslations();
-//   const selectedTag = useLogCreationStore((state) => state[type]);
-//   const setSingleTag = useLogCreationStore((state) => state.setSingleTag);
-//   const selectedCity = useLogCreationStore((state) => state['city']);
-//   const selectedCountry = useLogCreationStore((state) => state['country']);
+//   const selectedTag = useLogTagStore((state) => state[type]);
+//   const setSingleTag = useLogTagStore((state) => state.setSingleTag);
+//   const selectedCity = useLogTagStore((state) => state['city']);
+//   const selectedCountry = useLogTagStore((state) => state['country']);
 //   const isDomestic = selectedCountry === '한국';
 
 //   // 선택한 값에 따라 다음 태그가 결정

@@ -14,7 +14,7 @@ import DaumPostcode from './DaumPostcode';
 
 interface PlaceFormProps {
   idx: number;
-  type?: 'existing' | 'added';
+  type?: 'old' | 'new';
   globalIdx?: number;
   isEditPage?: boolean;
   onDeletePlace: (globalIdx: number) => void;
@@ -22,14 +22,14 @@ interface PlaceFormProps {
   onMoveDownPlace: (globalIdx: number) => void;
 }
 
-const getFieldName = (idx: number, type: 'existing' | 'added', isEdit: boolean) => {
+const getFieldName = (idx: number, type: 'old' | 'new', isEdit: boolean) => {
   if (!isEdit) return `places.${idx}`; // 등록 페이지
-  return type === 'existing' ? `places.${idx}` : `addedPlace.${idx}`; // 수정 페이지 (기존 : 신규)
+  return type === 'old' ? `places.${idx}` : `addedPlace.${idx}`; // 수정 페이지 (기존 : 신규)
 };
 
 const PlaceForm = ({
   idx,
-  type = 'existing',
+  type = 'old',
   globalIdx,
   isEditPage = false,
   onDeletePlace,
@@ -45,7 +45,7 @@ const PlaceForm = ({
   const showCategoryError = !!locationValue && !categoryValue;
 
   const placeErrors = (formState.errors as any)[
-    isEditPage ? (type === 'existing' ? 'places' : 'addedPlace') : 'places'
+    isEditPage ? (type === 'old' ? 'places' : 'addedPlace') : 'places'
   ]?.[idx];
 
   const translations = {
@@ -70,7 +70,7 @@ const PlaceForm = ({
         />
       </div>
 
-      <ImageSection idx={idx} fieldName={fieldName} edit={isEditPage && type === 'existing'} />
+      <ImageSection idx={idx} fieldName={fieldName} edit={isEditPage && type === 'old'} />
 
       <div className="mt-2">
         {/* Place Name */}
