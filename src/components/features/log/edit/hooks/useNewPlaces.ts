@@ -26,7 +26,6 @@ export function useNewPlaces({ newPlacesArray, logId, totalPlacesCount }: UseNew
     newPlacesArray.append(INITIAL_PLACE);
   };
   const deleteNewPlace = (idx: number) => {
-    console.log('deleteNewPlace', idx);
     // 전체 장소 개수가 1개 이하면 삭제 불가
     if (totalPlacesCount <= 1) {
       toast.error(t('minPlaceError'), { id: 'minPlaceError' });
@@ -35,14 +34,11 @@ export function useNewPlaces({ newPlacesArray, logId, totalPlacesCount }: UseNew
     newPlacesArray.remove(idx);
   };
   const moveNewPlaceUp = (idx: number) => {
-    console.log('moveNewPlaceUp', idx);
     if (idx <= 0) return;
     newPlacesArray.swap(idx, idx - 1);
   };
   const moveNewPlaceDown = (idx: number) => {
-    console.log('moveNewPlaceDown', idx);
     if (newPlacesArray.fields.length - 1 <= idx) return;
-
     newPlacesArray.swap(idx, idx + 1);
   };
 

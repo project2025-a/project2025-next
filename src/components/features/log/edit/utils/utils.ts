@@ -21,14 +21,12 @@ export const getChangeStatus = (form: UseFormReturn<LogEditFormValues>) => {
     places,
     (item) => item?.placeId ?? ''
   ); // 장소 순서 변경
-  console.log('hasOrderChanged', hasPlaceOrderChanged);
 
   const hasPlaceImageOrderChanged = isOrderChanged(
     defaultPlaces?.map((p) => p?.placeImages).flat() ?? [],
     places.map((p) => p.placeImages).flat(),
     (item) => item?.place_image_id ?? ''
   ); // 장소 이미지 순서 변경
-  console.log('hasPlaceImageOrderChanged', hasPlaceImageOrderChanged);
 
   return {
     hasAddedPlace,

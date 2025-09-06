@@ -24,7 +24,6 @@ export async function updateLog(formData: FormData, logId: string, localeArg?: I
     const locale: ILocale = _raw === 'en' ? 'en' : 'ko';
 
     const parseResult = parseFormData<LogEditFormValues>(formData);
-    console.log('parseResult111', parseResult);
     await performDatabaseUpdates(supabase, logId, parseResult, locale);
 
     // Storage 작업은 DB 작업 후 수행
@@ -102,12 +101,11 @@ async function performStorageOperations(
 async function updateTags(supabase: SupabaseClient, logId: string, tags: any, locale: ILocale) {
   const upsertTagsByCategory = async (category: 'mood' | 'activity') => {
     const categoryTags = tags[category];
-    if (!categoryTags?.length) return;
 
     const schema = getSchema(locale);
     const table = setLocaleTable('log_tag', locale);
 
-    // 기존 태그 삭제
+    // 기존 태그 삭제 (태그가 있든 없든 항상 삭제)
     const { error: deleteError } = await supabase
       .schema(schema)
       .from(table)
@@ -117,16 +115,18 @@ async function updateTags(supabase: SupabaseClient, logId: string, tags: any, lo
 
     if (deleteError) throw new Error(`${category} 태그 삭제 실패`);
 
-    // 새 태그 추가
-    const newTags = categoryTags.map((tag: string) => ({
-      log_id: logId,
-      tag,
-      category,
-    }));
+    // 새 태그가 있는 경우에만 추가
+    if (categoryTags?.length) {
+      const newTags = categoryTags.map((tag: string) => ({
+        log_id: logId,
+        tag,
+        category,
+      }));
 
-    const { error: insertError } = await supabase.schema(schema).from(table).insert(newTags);
+      const { error: insertError } = await supabase.schema(schema).from(table).insert(newTags);
 
-    if (insertError) throw new Error(`${category} 태그 삽입 실패`);
+      if (insertError) throw new Error(`${category} 태그 삽입 실패`);
+    }
   };
 
   await Promise.all([upsertTagsByCategory('mood'), upsertTagsByCategory('activity')]);

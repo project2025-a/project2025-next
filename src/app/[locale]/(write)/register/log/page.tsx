@@ -86,7 +86,7 @@ const LogPage = () => {
       </Form>
 
       {/* footer */}
-      <div className="text-[13px] w-full h-9 rounded-md flex items-center justify-center bg-error-50 text-red-500 my-2.5">
+      <div className="text-[13px] w-full min-h-9 rounded-md flex items-center justify-center bg-error-50 text-red-500 my-2.5">
         {translations.logPage('deleteWarning')}
       </div>
 

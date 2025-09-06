@@ -32,7 +32,7 @@ const useExistingPlaces = ({
     const { placeId: deletedPlaceId } = oldPlacesArray.fields[idx]; // 삭제할 장소 id
     oldPlacesArray.remove(idx); // 필드에서 지우고
     form.setValue('deletedPlace', [...form.getValues('deletedPlace'), deletedPlaceId]); // 삭제된 장소 id 추가
-    console.log('deletedPlace', form.getValues('deletedPlace'));
+    // console.log('deletedPlace', form.getValues('deletedPlace'));
     // 삭제된 장소 id
   };
   const moveExistingPlaceUp = (idx: number) => {
@@ -55,13 +55,13 @@ const useExistingPlaces = ({
     extractedDirtyValues: Partial<LogEditFormValues>,
     changedPlaces?: LogEditFormValues['places']
   ) => {
-    console.log('extractedDirtyValues:', extractedDirtyValues);
-    console.log('changedPlaces:', changedPlaces);
+    // console.log('extractedDirtyValues:', extractedDirtyValues);
+    // console.log('changedPlaces:', changedPlaces);
     const patchedDirtyValues = {
       ...extractedDirtyValues,
       places: oldPlacesArray.fields.map((place, idx) => {
         const dirtyPlace = extractedDirtyValues.places?.[idx]; // 특정 인덱스 dirty 값
-        console.log(`장소 ${idx} 현재 placeImages:`, place.placeImages);
+        // console.log(`장소 ${idx} 현재 placeImages:`, place.placeImages);
 
         return {
           id: place.placeId,
@@ -81,8 +81,14 @@ const useExistingPlaces = ({
       deletedPlace: form.getValues('deletedPlace'),
     };
 
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>> patchedDirtyValues', patchedDirtyValues);
+    // console.log('>>>>>>>>>>>>>>>>>>>>>>>>> patchedDirtyValues', patchedDirtyValues);
     const formData = createFormData(patchedDirtyValues);
+
+    // 태그 데이터를 별도로 추가 (빈값이면 반영이 안돼서)
+    const tags = form.getValues('tags');
+    if (tags) {
+      formData.append('tags', JSON.stringify(tags));
+    }
     // console.log('>>>>>>>>>>>>>>>>>>>>>>>>> formData', formData);
     // for (const [key, value] of formData.entries()) {
     //   console.log('>>>>>>>>>', key, value);

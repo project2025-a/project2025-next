@@ -58,8 +58,6 @@ const LogEditPage = ({ logData }: { logData: DetailLog }) => {
     } = getChangeStatus(form);
     const hasDirtyValues = Object.keys(extractedDirtyValues).length > 0;
 
-    console.log('hasDirtyValues', hasDirtyValues);
-
     try {
       if (hasAddedPlace) {
         // 새로운 장소 추가

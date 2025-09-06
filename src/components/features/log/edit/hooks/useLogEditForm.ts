@@ -56,9 +56,6 @@ const useLogEditForm = ({ logData }: UseLogEditFormProps) => {
     name: 'addedPlace',
   });
 
-  // console.log('oldPlacesArray.fields', oldPlacesArray.fields);
-  // console.log('newPlacesArray.fields', newPlacesArray.fields);
-
   // 기존 장소와 새 장소를 합쳐서 렌더링
   const allPlaces = useMemo(
     () => [
