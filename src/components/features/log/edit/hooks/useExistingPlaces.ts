@@ -51,13 +51,18 @@ const useExistingPlaces = ({
   };
 
   //
-  const submitExistedPlaces = async (extractedDirtyValues: Partial<LogEditFormValues>) => {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>> extractedDirtyValues', extractedDirtyValues);
-
+  const submitExistedPlaces = async (
+    extractedDirtyValues: Partial<LogEditFormValues>,
+    changedPlaces?: LogEditFormValues['places']
+  ) => {
+    console.log('extractedDirtyValues:', extractedDirtyValues);
+    console.log('changedPlaces:', changedPlaces);
     const patchedDirtyValues = {
       ...extractedDirtyValues,
       places: oldPlacesArray.fields.map((place, idx) => {
         const dirtyPlace = extractedDirtyValues.places?.[idx]; // 특정 인덱스 dirty 값
+        console.log(`장소 ${idx} 현재 placeImages:`, place.placeImages);
+
         return {
           id: place.placeId,
           order: idx + 1,
@@ -65,7 +70,12 @@ const useExistingPlaces = ({
           ...(dirtyPlace?.category && { category: dirtyPlace.category }),
           ...(dirtyPlace?.location && { location: dirtyPlace.location }),
           ...(dirtyPlace?.description && { description: dirtyPlace.description }),
-          ...(dirtyPlace?.placeImages && { placeImages: dirtyPlace.placeImages }),
+          ...(changedPlaces && {
+            placeImages: changedPlaces[idx].placeImages?.map((image, imageIdx) => ({
+              ...image,
+              order: imageIdx + 1, // 이미지 순서 갱신
+            })),
+          }),
         };
       }),
       deletedPlace: form.getValues('deletedPlace'),

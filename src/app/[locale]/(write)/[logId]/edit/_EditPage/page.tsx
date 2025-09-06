@@ -66,11 +66,11 @@ const LogEditPage = ({ logData }: { logData: DetailLog }) => {
         await handleAddNewPlaces(values.addedPlace, places.length);
       }
       if (hasDeletedPlace || hasDirtyValues || hasPlaceOrderChanged || hasPlaceImageOrderChanged) {
-        console.log(hasPlaceOrderChanged, hasPlaceImageOrderChanged);
-        // console.log('실행할예정', extractedDirtyValues);
-
-        // 기존 장소 수정
-        await submitExistedPlaces(extractedDirtyValues);
+        if (hasPlaceImageOrderChanged) {
+          await submitExistedPlaces(extractedDirtyValues, values.places);
+        } else {
+          await submitExistedPlaces(extractedDirtyValues);
+        }
       } else {
         toast.info(translations.toastLogEdit('noChanges'), {
           id: 'noChanges',
