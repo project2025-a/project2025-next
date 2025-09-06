@@ -31,7 +31,7 @@ const LogEditPage = ({ logData }: { logData: DetailLog }) => {
   const { form, oldPlacesArray, newPlacesArray, allPlaces, movePlaceGlobal } = useLogEditForm({
     logData,
   });
-  const { deleteExistingPlace, editExistingPlaces } = useExistingPlaces({
+  const { deleteExistingPlace, submitExistedPlaces } = useExistingPlaces({
     oldPlacesArray,
     logId: log_id,
     totalPlacesCount: allPlaces.length,
@@ -49,7 +49,13 @@ const LogEditPage = ({ logData }: { logData: DetailLog }) => {
     // console.log('변경된 값', form.formState.dirtyFields); // 텍스트 변경은 파악함 (제목, 장소(이미지 제외), 태그), 장소 추가 >>  이미지 순서, 장소 순서, 삭제 장소, 파악안됨
 
     // 변경 상태 확인
-    const { hasAddedPlace, hasDeletedPlace, extractedDirtyValues } = getChangeStatus(form);
+    const {
+      hasAddedPlace,
+      hasDeletedPlace,
+      extractedDirtyValues,
+      hasPlaceOrderChanged,
+      hasPlaceImageOrderChanged,
+    } = getChangeStatus(form);
     const hasDirtyValues = Object.keys(extractedDirtyValues).length > 0;
 
     console.log('hasDirtyValues', hasDirtyValues);
@@ -59,10 +65,12 @@ const LogEditPage = ({ logData }: { logData: DetailLog }) => {
         // 새로운 장소 추가
         await handleAddNewPlaces(values.addedPlace, places.length);
       }
-      if (hasDeletedPlace || hasDirtyValues) {
-        console.log('실행할예정', extractedDirtyValues);
+      if (hasDeletedPlace || hasDirtyValues || hasPlaceOrderChanged || hasPlaceImageOrderChanged) {
+        console.log(hasPlaceOrderChanged, hasPlaceImageOrderChanged);
+        // console.log('실행할예정', extractedDirtyValues);
+
         // 기존 장소 수정
-        await editExistingPlaces(extractedDirtyValues);
+        await submitExistedPlaces(extractedDirtyValues);
       } else {
         toast.info(translations.toastLogEdit('noChanges'), {
           id: 'noChanges',

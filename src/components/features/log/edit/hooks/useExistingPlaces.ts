@@ -51,7 +51,7 @@ const useExistingPlaces = ({
   };
 
   //
-  const editExistingPlaces = async (extractedDirtyValues: Partial<LogEditFormValues>) => {
+  const submitExistedPlaces = async (extractedDirtyValues: Partial<LogEditFormValues>) => {
     console.log('>>>>>>>>>>>>>>>>>>>>>>>>> extractedDirtyValues', extractedDirtyValues);
 
     const patchedDirtyValues = {
@@ -77,11 +77,12 @@ const useExistingPlaces = ({
     // for (const [key, value] of formData.entries()) {
     //   console.log('>>>>>>>>>', key, value);
     // }
+
     await editMutateAsync({ formData, logId });
   };
 
   return {
-    editExistingPlaces,
+    submitExistedPlaces,
     deleteExistingPlace,
     moveExistingPlaceUp,
     moveExistingPlaceDown,

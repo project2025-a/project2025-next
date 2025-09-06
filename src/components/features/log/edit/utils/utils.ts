@@ -5,34 +5,36 @@ import { FieldValues, UseFormReturn } from 'react-hook-form';
 export const getChangeStatus = (form: UseFormReturn<LogEditFormValues>) => {
   const values = form.getValues(); // 현재 form 값
   const places = form.getValues().places; // 장소 필드 값
+  const defaultPlaces = form.formState.defaultValues?.places; // 장소 필드 값
 
   // 변경 필드값 추출
   const extractedDirtyValues = extractDirtyValues<LogEditFormValues>(
     form.formState.dirtyFields,
     values
   );
-  console.log('extractedDirtyValues', extractedDirtyValues);
 
   const hasAddedPlace = values.addedPlace.length > 0; // 추가된 장소
   const hasDeletedPlace = values.deletedPlace.length > 0; // 삭제된 장소
 
-  // const hasPlaceOrderChanged = isOrderChanged(places, places, (item) => item.id); // 장소 순서 변경
-  // console.log('hasOrderChanged', hasOrderChanged);
+  const hasPlaceOrderChanged = isOrderChanged(
+    defaultPlaces ?? [],
+    places,
+    (item) => item?.placeId ?? ''
+  ); // 장소 순서 변경
+  console.log('hasOrderChanged', hasPlaceOrderChanged);
 
-  // const prevImages = places.map((p) => p.placeImages).flat();
-  // const currentImages = places.map((p) => p.placeImages).flat();
-  // const imageOrderChanged = isOrderChanged(
-  //   prevImages,
-  //   currentImages,
-  //   (item) => item.place_image_id
-  // ); // 장소 이미지 순서 변경
-  // console.log('imageOrderChanged', imageOrderChanged);
+  const hasPlaceImageOrderChanged = isOrderChanged(
+    defaultPlaces?.map((p) => p?.placeImages).flat() ?? [],
+    places.map((p) => p.placeImages).flat(),
+    (item) => item?.place_image_id ?? ''
+  ); // 장소 이미지 순서 변경
+  console.log('hasPlaceImageOrderChanged', hasPlaceImageOrderChanged);
 
   return {
     hasAddedPlace,
     hasDeletedPlace,
-    // hasOrderChanged,
-    // isImageOrderChanged: imageOrderChanged,
+    hasPlaceOrderChanged,
+    hasPlaceImageOrderChanged,
     extractedDirtyValues,
   };
 };
@@ -63,19 +65,6 @@ export function extractDirtyValues<T extends FieldValues>(
     return acc;
   }, {} as Partial<T>);
 }
-
-/* 장소 이미지 순서 변경 확인용 */
-// export function isImageOrderChanged(
-//   prevImages: Tables<'place_images'>[], // places.map((p) => p.place_images).flat(),
-//   currImages: LogEditFormValues['places'][number]['placeImages'] // form.getValues('places').map((p) => p.placeImages).flat()
-// ) {
-//   if (prevImages.length !== currImages.length) return true;
-
-//   // 같은 인덱스에 있는 이미지의 place_image_id 비교
-//   return prevImages.some(
-//     (prevImg, idx) => prevImg?.place_image_id !== currImages[idx]?.place_image_id
-//   );
-// }
 
 /* 장소 순서 변경 확인용 
 - useFieldArray는 값 변경만 확인되므로, 순서 변경은 직접 비교
