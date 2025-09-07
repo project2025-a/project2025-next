@@ -3,9 +3,9 @@ import { AddCameraIcon } from '@/components/common/Icons';
 import { FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useGpsAddressExtraction } from '@/hooks/useGpsAddressExtraction';
+import { useImageCompression } from '@/hooks/useImageCompression';
 import useMultipleImagePreview from '@/hooks/useMultipleImagePreview';
 import { cn } from '@/lib/utils';
-import { compressImageToWebp } from '@/utils/compressImageToWebp';
 import { Reorder } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { useFieldArray, useFormContext } from 'react-hook-form';
@@ -20,24 +20,23 @@ interface MultiImageFormProps {
 const MAX_IMAGES_LENGTH = 8;
 
 const MultiImageForm = ({ idx, fieldName }: MultiImageFormProps) => {
-  const { control, setValue, getValues } = useFormContext<any>();
+  const { control, setValue, getValues } = useFormContext();
   const t = useTranslations('Register.LogPage');
-  const tToast = useTranslations('Toast.logCreate');
   const { fields, append, remove, replace } = useFieldArray({
     control: control,
     name: fieldName ? `${fieldName}.placeImages` : `places.${idx}.placeImages`,
   });
 
   const { addFile, removeByFile, getPreviewUrl } = useMultipleImagePreview();
+  const { compressFiles, isCompressing } = useImageCompression();
 
   // GPS 추출 훅 사용
   const placeAddressFieldName = fieldName ? `${fieldName}` : `places.${idx}.placeName`;
-  const currentAddress = getValues(`${placeAddressFieldName}.location`);
-
   const { extractGpsAndSetAddress } = useGpsAddressExtraction({
-    onAddressSet: (address: string) => setValue(`${placeAddressFieldName}.location`, address),
-    currentAddress,
-    onSkip: () => toast.info(tToast('autoAddressSkipped')),
+    onAddressSet: async (address: string) => {
+      setValue(`${placeAddressFieldName}.location`, address);
+    },
+    currentAddress: getValues(`${placeAddressFieldName}.location`),
   });
 
   const handleChangeFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,21 +47,15 @@ const MultiImageForm = ({ idx, fieldName }: MultiImageFormProps) => {
       toast.error(t('maxImageError'));
       return;
     }
-    if (fileList.length >= MAX_IMAGES_LENGTH) toast.info(t('maxImageError'));
-
     const files = Array.from(fileList).slice(0, MAX_IMAGES_LENGTH - fields.length);
-
     // GPS 정보 추출 및 주소 자동 설정
     await extractGpsAndSetAddress(files);
 
-    const compressedFiles = await Promise.all(files.map((file) => compressImageToWebp(file)));
-
-    compressedFiles
-      .filter((compressedImg) => compressedImg !== undefined)
-      .forEach((compressedImg) => {
-        addFile(compressedImg);
-        append({ file: compressedImg });
-      });
+    const compressedFiles = await compressFiles(files);
+    compressedFiles.forEach((compressedImg) => {
+      addFile(compressedImg);
+      append({ file: compressedImg });
+    });
   };
 
   const handleRemove = (index: number, file: Blob) => {
@@ -77,7 +70,12 @@ const MultiImageForm = ({ idx, fieldName }: MultiImageFormProps) => {
   return (
     <div className="flex flex-col">
       <FormLabel htmlFor={`file-upload-${idx}`}>
-        <div className="image-upload-button border-dashed">
+        <div
+          className={cn(
+            'image-upload-button border-dashed',
+            isCompressing && 'cursor-progress opacity-50'
+          )}
+        >
           <AddCameraIcon />
           <span className="text-[14px] text-light-700 font-medium">
             {t('uploadPictures')}

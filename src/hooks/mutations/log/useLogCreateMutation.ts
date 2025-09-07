@@ -4,8 +4,8 @@ import { HOME } from '@/constants/pathname';
 import useUser from '@/hooks/queries/user/useUser';
 import { useRouter } from '@/i18n/navigation';
 import { trackLogCreateEvent } from '@/lib/analytics';
-import { useLogCreationStore } from '@/stores/logCreationStore';
-import { LogFormValues, NewPlace, NewPlaceImage } from '@/types/log';
+import { useLogTagStore } from '@/stores/logTagStore';
+import { LogCreateValues, NewPlace, NewPlaceImage } from '@/types/log';
 import { uploadPlacesOptimized } from '@/utils/imageUpload';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocale, useTranslations } from 'next-intl';
@@ -15,9 +15,9 @@ import { toast } from 'sonner';
 export type LogCreatePayload = {
   logId: string;
   userId: string;
-  logTitle: LogFormValues['logTitle'];
-  tags: LogFormValues['tags'];
-  address: LogFormValues['address'];
+  logTitle: LogCreateValues['logTitle'];
+  tags: LogCreateValues['tags'];
+  address: LogCreateValues['address'];
   placeDataList: NewPlace[];
   placeImageDataList: NewPlaceImage[];
   locale: ILocale;
@@ -28,14 +28,13 @@ const useLogCreateMutation = () => {
 
   const router = useRouter();
   const queryClient = useQueryClient();
-  const clearTag = useLogCreationStore((state) => state.clearTag);
+  const clearTag = useLogTagStore((state) => state.clearTag);
   const t = useTranslations('Toast.logCreate');
-  const setSubmitted = useLogCreationStore((state) => state.setSubmitted);
   //일단 유저 아이디 추가
   const me = useUser();
 
   return useMutation({
-    mutationFn: async (values: LogFormValues) => {
+    mutationFn: async (values: LogCreateValues) => {
       const logId = crypto.randomUUID(); // 로그 고유 id
 
       // 1. 장소 이미지 업로드
@@ -96,7 +95,6 @@ const useLogCreateMutation = () => {
 
         // router.replace(`/log/${data}`);
         router.replace(HOME);
-        setSubmitted(true);
         clearTag();
         toast.success(t('success'), {
           description: t('redirect'),

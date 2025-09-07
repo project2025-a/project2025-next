@@ -10,10 +10,11 @@ import { useFormContext } from 'react-hook-form';
 import PlaceDrawer from '../register/PlaceDrawer';
 import ImageSection from '../register/place-item/ImageSection';
 import TextSection from '../register/place-item/TextSection';
+import DaumPostcode from './DaumPostcode';
 
 interface PlaceFormProps {
   idx: number;
-  type?: 'existing' | 'added';
+  type?: 'old' | 'new';
   globalIdx?: number;
   isEditPage?: boolean;
   onDeletePlace: (globalIdx: number) => void;
@@ -21,9 +22,14 @@ interface PlaceFormProps {
   onMoveDownPlace: (globalIdx: number) => void;
 }
 
+const getFieldName = (idx: number, type: 'old' | 'new', isEdit: boolean) => {
+  if (!isEdit) return `places.${idx}`; // 등록 페이지
+  return type === 'old' ? `places.${idx}` : `addedPlace.${idx}`; // 수정 페이지 (기존 : 신규)
+};
+
 const PlaceForm = ({
   idx,
-  type = 'existing',
+  type = 'old',
   globalIdx,
   isEditPage = false,
   onDeletePlace,
@@ -32,26 +38,25 @@ const PlaceForm = ({
 }: PlaceFormProps) => {
   const { control, watch, formState } = useFormContext();
   const [isChecked, setIsChecked] = useState(false);
+  const fieldName = getFieldName(idx, type, isEditPage);
 
-  const fieldName = isEditPage
-    ? type === 'existing'
-      ? `places.${idx}`
-      : `addedPlace.${idx}`
-    : `places.${idx}`;
+  const [locationValue, categoryValue] = watch([`${fieldName}.location`, `${fieldName}.category`]);
 
-  const locationValue = watch(`${fieldName}.location`);
-  const categoryValue = watch(`${fieldName}.category`);
   const showCategoryError = !!locationValue && !categoryValue;
 
   const placeErrors = (formState.errors as any)[
-    isEditPage ? (type === 'existing' ? 'places' : 'addedPlace') : 'places'
+    isEditPage ? (type === 'old' ? 'places' : 'addedPlace') : 'places'
   ]?.[idx];
 
-  const tLog = useTranslations('Register.LogPage');
-  const tCategory = useTranslations('Category');
+  const translations = {
+    logPage: useTranslations('Register.LogPage'),
+    category: useTranslations('Category'),
+  };
+
+  const currentIdx = globalIdx ?? idx;
 
   return (
-    <div className="mt-6" data-place-index={globalIdx ?? idx}>
+    <div className="mt-6" data-place-index={currentIdx}>
       <div className="flex justify-between">
         <span className="text-[14px] font-semibold text-black">
           {String((globalIdx ?? idx) + 1).padStart(2, '0')}
@@ -59,13 +64,13 @@ const PlaceForm = ({
         <PlaceDrawer
           isChecked={isChecked}
           setIsChecked={setIsChecked}
-          onDeletePlace={() => onDeletePlace(globalIdx ?? idx)}
-          onMoveUpPlace={() => onMoveUpPlace(globalIdx ?? idx)}
-          onMoveDownPlace={() => onMoveDownPlace(globalIdx ?? idx)}
+          onDeletePlace={() => onDeletePlace(currentIdx)}
+          onMoveUpPlace={() => onMoveUpPlace(currentIdx)}
+          onMoveDownPlace={() => onMoveDownPlace(currentIdx)}
         />
       </div>
 
-      <ImageSection idx={idx} fieldName={fieldName} edit={isEditPage && type === 'existing'} />
+      <ImageSection idx={idx} fieldName={fieldName} edit={isEditPage && type === 'old'} />
 
       <div className="mt-2">
         {/* Place Name */}
@@ -75,13 +80,13 @@ const PlaceForm = ({
           render={({ field }) => (
             <div className="space-y-1">
               <label className="block text-[14px] font-semibold text-black mt-1">
-                {tLog('placeNameLabel')}
+                {translations.logPage('placeNameLabel')}
                 <span className="text-error-500"> *</span>
               </label>
               <Input
                 {...field}
                 type="text"
-                placeholder={`${tLog('placeNamePlaceholder')}`}
+                placeholder={`${translations.logPage('placeNamePlaceholder')}`}
                 className={cn(
                   'block w-full px-4 py-5 rounded-[8px] bg-light-50 text-black',
                   'placeholder:text-light-300 !text-[14px] focus:outline-none',
@@ -100,22 +105,25 @@ const PlaceForm = ({
             render={({ field }) => (
               <div className="space-y-1">
                 <label className="block text-[14px] font-semibold text-black mt-1">
-                  {tLog('locationLabel')}
+                  {translations.logPage('locationLabel')}
                   <span className="text-error-500"> *</span>
                   <span className="text-[12px] font-normal text-light-300 ml-1.5">
-                    {tLog('placeNameNote')}
+                    {translations.logPage('placeNameNote')}
                   </span>
                 </label>
-                <Input
-                  {...field}
-                  type="text"
-                  placeholder={`${tLog('locationPlaceholder')}`}
-                  className={cn(
-                    'block w-full px-4 py-5 rounded-[8px] bg-light-50 text-black',
-                    'placeholder:text-light-300 !text-[14px]  focus:outline-none',
-                    placeErrors?.location && 'placeholder:text-error-500'
-                  )}
-                />
+                <div className="flex items-center gap-2">
+                  <Input
+                    {...field}
+                    type="text"
+                    placeholder={`${translations.logPage('locationPlaceholder')}`}
+                    className={cn(
+                      'block w-full px-4 py-5 rounded-[8px] bg-light-50 text-black',
+                      'placeholder:text-light-300 !text-[14px]  focus:outline-none',
+                      placeErrors?.location && 'placeholder:text-error-500'
+                    )}
+                  />
+                  <DaumPostcode onComplete={field.onChange} />
+                </div>
               </div>
             )}
           />
@@ -144,7 +152,7 @@ const PlaceForm = ({
                           showCategoryError && '!text-error-500 border-error-500'
                         )}
                       >
-                        {tCategory(category)}
+                        {translations.category(category)}
                       </ToggleGroupItem>
                     ))}
                   </ToggleGroup>

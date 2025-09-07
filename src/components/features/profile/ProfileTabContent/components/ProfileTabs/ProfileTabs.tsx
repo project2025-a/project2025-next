@@ -19,7 +19,7 @@ export default function ProfileTabs({ me, userId }: ProfileTabsProps) {
 
   const { tab, setTab } = useProfileTabStore();
   const router = useRouter();
-  const handleGotoRegisterPage = () => router.push(`${REGISTER_PATHS.MOOD}`);
+  const handleGotoRegisterPage = () => router.push(`${REGISTER_PATHS.LOG}`);
 
   const onTabClick = (tab: TabType) => {
     setTab(tab);

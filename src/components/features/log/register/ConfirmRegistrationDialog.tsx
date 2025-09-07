@@ -17,9 +17,10 @@ import { useState } from 'react';
 interface ConfirmRegistrationDialogProps {
   edit?: boolean;
   logTitle?: string;
-  onSubmitLogForm: () => Promise<void>;
+  onSubmitLogForm: () => void;
   disabled?: boolean;
   loading?: boolean;
+  submitText?: string;
 }
 
 const ConfirmRegistrationDialog = ({
@@ -28,6 +29,7 @@ const ConfirmRegistrationDialog = ({
   onSubmitLogForm,
   disabled,
   loading,
+  submitText,
 }: ConfirmRegistrationDialogProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -47,7 +49,7 @@ const ConfirmRegistrationDialog = ({
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger asChild>
         <Button size={'xl'} className="font-bold w-full mt-2 mb-6 text-[13px]" disabled={disabled}>
-          {loading ? <Loading className="max-h-fit size-24" /> : t('submit')}
+          {loading ? <Loading className="max-h-fit size-24" /> : submitText ?? t('submit')}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="w-[400px]">

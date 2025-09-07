@@ -1,0 +1,108 @@
+import useLogEditMutation from '@/hooks/mutations/log/useLogEditMutation';
+import { LogEditFormValues } from '@/types/log';
+import { createFormData } from '@/utils/formatLog';
+import { useTranslations } from 'next-intl';
+import { UseFieldArrayReturn, UseFormReturn } from 'react-hook-form';
+import { toast } from 'sonner';
+
+interface UseExistingPlacesProps {
+  oldPlacesArray: UseFieldArrayReturn<LogEditFormValues, 'places'>;
+  totalPlacesCount: number;
+  logId: string;
+  form: UseFormReturn<LogEditFormValues>;
+  // places: LogEditFormValues['places'];
+}
+
+// 기존 장소 수정
+const useExistingPlaces = ({
+  oldPlacesArray,
+  totalPlacesCount,
+  logId,
+  form,
+}: UseExistingPlacesProps) => {
+  const t = useTranslations('Toast.PlaceDrawer');
+  const { mutateAsync: editMutateAsync } = useLogEditMutation();
+
+  const deleteExistingPlace = (idx: number) => {
+    if (totalPlacesCount <= 1) {
+      toast.error(t('minPlaceError'), { id: 'minPlaceError' });
+      return;
+    }
+
+    const { placeId: deletedPlaceId } = oldPlacesArray.fields[idx]; // 삭제할 장소 id
+    oldPlacesArray.remove(idx); // 필드에서 지우고
+    form.setValue('deletedPlace', [...form.getValues('deletedPlace'), deletedPlaceId]); // 삭제된 장소 id 추가
+    // console.log('deletedPlace', form.getValues('deletedPlace'));
+    // 삭제된 장소 id
+  };
+  const moveExistingPlaceUp = (idx: number) => {
+    if (idx <= 0) {
+      toast.error(t('minPlaceError'), { id: 'minPlaceError' });
+      return;
+    }
+    oldPlacesArray.swap(idx, idx - 1);
+  };
+  const moveExistingPlaceDown = (idx: number) => {
+    if (totalPlacesCount - 1 <= idx) {
+      toast.error(t('minPlaceError'), { id: 'minPlaceError' });
+      return;
+    }
+    oldPlacesArray.swap(idx, idx + 1);
+  };
+
+  //
+  const submitExistedPlaces = async (
+    extractedDirtyValues: Partial<LogEditFormValues>,
+    changedPlaces?: LogEditFormValues['places']
+  ) => {
+    // console.log('extractedDirtyValues:', extractedDirtyValues);
+    // console.log('changedPlaces:', changedPlaces);
+    const patchedDirtyValues = {
+      ...extractedDirtyValues,
+      places: oldPlacesArray.fields.map((place, idx) => {
+        const dirtyPlace = extractedDirtyValues.places?.[idx]; // 특정 인덱스 dirty 값
+        // console.log(`장소 ${idx} 현재 placeImages:`, place.placeImages);
+
+        return {
+          id: place.placeId,
+          order: idx + 1,
+          ...(dirtyPlace?.placeName && { placeName: dirtyPlace.placeName }),
+          ...(dirtyPlace?.category && { category: dirtyPlace.category }),
+          ...(dirtyPlace?.location && { location: dirtyPlace.location }),
+          ...(dirtyPlace?.description && { description: dirtyPlace.description }),
+          ...(changedPlaces && {
+            placeImages: changedPlaces[idx].placeImages?.map((image, imageIdx) => ({
+              ...image,
+              order: imageIdx + 1, // 이미지 순서 갱신
+            })),
+          }),
+        };
+      }),
+      deletedPlace: form.getValues('deletedPlace'),
+    };
+
+    // console.log('>>>>>>>>>>>>>>>>>>>>>>>>> patchedDirtyValues', patchedDirtyValues);
+    const formData = createFormData(patchedDirtyValues);
+
+    // 태그 데이터를 별도로 추가 (빈값이면 반영이 안돼서)
+    const tags = form.getValues('tags');
+    if (tags) {
+      formData.append('tags', JSON.stringify(tags));
+    }
+    // console.log('>>>>>>>>>>>>>>>>>>>>>>>>> formData', formData);
+    // for (const [key, value] of formData.entries()) {
+    //   console.log('>>>>>>>>>', key, value);
+    // }
+
+    await editMutateAsync({ formData, logId });
+  };
+
+  return {
+    submitExistedPlaces,
+    deleteExistingPlace,
+    moveExistingPlaceUp,
+    moveExistingPlaceDown,
+  };
+};
+
+export default useExistingPlaces;

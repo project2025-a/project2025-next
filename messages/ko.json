@@ -11,8 +11,8 @@
       "success": "업로드가 성공적으로 완료되었습니다.",
       "redirect": "페이지가 이동합니다. 잠시만 기다려 주세요.",
       "error": "업로드가 실패했습니다. 다시 시도해주세요",
-      "autoAddressSuccess": "사진의 위치 정보로 주소가 자동 입력되었습니다.",
-      "autoAddressFailed": "위치 정보를 기반으로 주소를 찾을 수 없습니다.",
+      "autoAddressSuccess": "사진의 위치 정보로 주소가 자동 설정되었습니다.",
+      "autoAddressFailed": "위치 정보로 주소를 찾을 수 없습니다.",
       "autoAddressSkipped": "이미 주소가 등록되어 자동 입력을 생략했습니다.",
       "locationMissing": "등록할 장소가 선택되지 않았습니다. 다시 시도해주세요.",
       "placeAdded": "장소가 성공적으로 추가되었습니다.",
@@ -21,8 +21,7 @@
     "logEdit": {
       "success": "로그 수정이 완료되었습니다.",
       "error": "로그 수정에 실패했습니다.",
-      "noChanges": "변경 사항이 없습니다.",
-      "noChangesDesc": "이전 페이지로 돌아갑니다."
+      "noChanges": "변경 사항이 없습니다."
     },
     "logDelete": {
       "success": "로그가 삭제되었습니다.",
@@ -511,8 +510,8 @@
     "CountryPage": {
       "groupTitle": "국가를 선택해주세요.",
       "options": {
-        "국내": "국내",
-        "국외": "국외"
+        "한국": "한국",
+        "국제": "국제"
       }
     },
     "CityPage": {
@@ -527,7 +526,8 @@
     },
     "Footer": {
       "next": "다음",
-      "skip": "다음에 하기"
+      "register": "로그 등록",
+      "skip": "나중에 등록/수정 가능합니다."
     },
     "LogPage": {
       "loading": "로딩중...",
@@ -538,7 +538,7 @@
       "contentPlaceholder": "내용을 입력해주세요. (최대 500자)",
       "placeNameLabel": "장소명",
       "placeNameNote": "사진에 위치 정보가 있으면 자동 입력돼요.",
-      "placeNamePlaceholder": "예) 국립현대미술관 서울 ",
+      "placeNamePlaceholder": "예) 국립현대미술관 서울",
       "locationLabel": "주소",
       "locationPlaceholder": "예) 서울 종로구 삼청로 30",
       "uploadImage": "이미지 업로드",
@@ -585,8 +585,8 @@
     }
   },
   "CountryType": {
-    "국내": "국내",
-    "국외": "국외"
+    "한국": "한국",
+    "국제": "국제"
   },
   "Category": {
     "레스토랑": "레스토랑",

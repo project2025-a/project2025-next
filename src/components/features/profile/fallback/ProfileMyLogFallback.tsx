@@ -17,7 +17,7 @@ export default function ProfileMyLogFallback() {
       router.push('/login');
       return;
     }
-    router.push(REGISTER_PATHS.MOOD);
+    router.push(REGISTER_PATHS.LOG);
   };
   return (
     <section className="flex w-full">

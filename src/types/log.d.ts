@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { AddedPlaceSchema } from './../lib/zod/logSchema';
 
 export type LogFormValues = z.infer<typeof LogFormSchema>;
+export type LogCreateValues = z.infer<typeof LogCreateSchema>;
 export type AddedPlaceValues = z.infer<typeof AddedPlaceSchema>; // 로그 수정 시 새로 추가된 장소
 export type LogEditFormValues = z.infer<typeof LogEditFormSchema>;
 export type NewPlace = Omit<Tables<'place'>, 'created_at'>;

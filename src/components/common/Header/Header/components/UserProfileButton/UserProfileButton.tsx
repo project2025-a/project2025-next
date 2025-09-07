@@ -60,7 +60,7 @@ export default function UserProfileButton({ user }: UserProfileButtonProps) {
 
         {/* 로그 작성 / 문의하기 */}
         <div className="m-1">
-          <Link href={REGISTER_PATHS.MOOD}>
+          <Link href={REGISTER_PATHS.LOG}>
             <DropdownMenuItem className="flex items-center justify-start gap-2 px-4 py-3 text-text-sm">
               <AddImageIcon />
               {t('writeLog')}

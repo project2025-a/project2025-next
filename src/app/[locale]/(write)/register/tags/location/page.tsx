@@ -2,11 +2,11 @@
 import { RegisterFooter } from '@/components/common/Footer';
 import { PageIntro, SingleTagGroup } from '@/components/features/log/register/tags';
 import { REGISTER_PATHS } from '@/constants/pathname';
-import { useLogCreationStore } from '@/stores/logCreationStore';
+import { useLogTagStore } from '@/stores/logTagStore';
 
 const LocationSelectionPage = () => {
-  const selectedCountry = useLogCreationStore((state) => state.country);
-  const selectedCity = useLogCreationStore((state) => state.city);
+  const selectedCountry = useLogTagStore((state) => state.country);
+  const selectedCity = useLogTagStore((state) => state.city);
 
   return (
     <>
@@ -34,7 +34,7 @@ const LocationSelectionPage = () => {
         )}
       </div>
 
-      <RegisterFooter tagTargets={['country', 'city', 'sigungu']} nextPath={REGISTER_PATHS.LOG} />
+      <RegisterFooter tagTargets={['country', 'city', 'sigungu']} nextPath={REGISTER_PATHS.MOOD} />
     </>
   );
 };

@@ -11,7 +11,7 @@ interface RegisterLinkButtonsProps {
 
 export default function RegisterLinkButtons({ label }: RegisterLinkButtonsProps) {
   return (
-    <Link href={REGISTER_PATHS.MOOD} className="group inline-flex items-center">
+    <Link href={REGISTER_PATHS.LOG} className="group inline-flex items-center">
       {/* 텍스트 버튼 */}
       <div>
         <Button

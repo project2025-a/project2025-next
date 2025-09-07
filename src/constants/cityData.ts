@@ -235,7 +235,7 @@ export const cityDistricts: Record<string, string[]> = {
 
 export const cityCategories = Object.keys(cityDistricts);
 
-/* 국외 */
+/* 국제 */
 export const globalRegions: Record<string, string[]> = {
   유럽: [
     '독일',

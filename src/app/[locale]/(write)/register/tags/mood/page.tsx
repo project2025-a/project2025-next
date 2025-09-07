@@ -1,11 +1,11 @@
-import { RegisterFooter } from '@/components/common/Footer';
+import ClientRegisterFooter from '@/components/features/log/register/ClientRegisterFooter';
 import { PageIntro } from '@/components/features/log/register/tags';
 import MultiTagGroup from '@/components/features/log/register/tags/MultiTagGroup';
-import { REGISTER_PATHS } from '@/constants/pathname';
 import { getTranslations } from 'next-intl/server';
 
 const MoodSelectionPage = async () => {
   const t = await getTranslations('Register.MoodPage.group');
+
   return (
     <>
       <PageIntro type="mood" />
@@ -13,11 +13,8 @@ const MoodSelectionPage = async () => {
         <MultiTagGroup title={t('withWhom')} type="mood" />
         <MultiTagGroup title={t('whatFeeling')} type="activity" />
       </div>
-      <RegisterFooter
-        tagTargets={['mood', 'activity']}
-        nextPath={REGISTER_PATHS.LOCATION}
-        delayBtn
-      />
+
+      <ClientRegisterFooter />
     </>
   );
 };

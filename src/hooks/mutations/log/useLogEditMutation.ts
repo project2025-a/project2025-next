@@ -1,10 +1,9 @@
 import { logKeys, placeKeys, searchKeys } from '@/app/actions/keys';
 import { updateLog } from '@/app/actions/log-update';
-import { useRouter } from '@/i18n/navigation';
 import { trackLogEditEvent } from '@/lib/analytics';
-import { useLogCreationStore } from '@/stores/logCreationStore';
+import { useLogTagStore } from '@/stores/logTagStore';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
 interface LogEditMutationProps {
@@ -13,19 +12,17 @@ interface LogEditMutationProps {
 }
 
 const useLogEditMutation = () => {
-  const t = useTranslations('Toast.logEdit');
-  const tToast = useTranslations('Toast.logCreate');
-  const router = useRouter();
-  const queryClient = useQueryClient();
-  const clearTag = useLogCreationStore((state) => state.clearTag);
+  const translations = {
+    toastLogEdit: useTranslations('Toast.logEdit'),
+    toastLogCreate: useTranslations('Toast.logCreate'),
+  };
 
-  const locale = useLocale();
-  const normalizedLocale = locale === 'en' ? 'en' : 'ko';
+  const queryClient = useQueryClient();
+  const clearTag = useLogTagStore((state) => state.clearTag);
 
   return useMutation({
-    mutationFn: ({ formData, logId }: LogEditMutationProps) =>
-      updateLog(formData, logId, normalizedLocale),
-    onSuccess: ({ success }, { logId }) => {
+    mutationFn: ({ formData, logId }: LogEditMutationProps) => updateLog(formData, logId),
+    onSuccess: ({ success }) => {
       if (success) {
         trackLogEditEvent('complete');
 
@@ -38,16 +35,14 @@ const useLogEditMutation = () => {
           queryClient.removeQueries({ queryKey: key, exact: false });
         });
 
-        router.replace(`/log/${logId}`);
-        toast.success(t('success'), {
-          description: tToast('redirect'),
+        toast.success(translations.toastLogEdit('success'), {
+          description: translations.toastLogCreate('redirect'),
         });
       }
     },
     onError: () => {
       trackLogEditEvent('cancel');
-
-      toast.error(t('error'));
+      toast.error(translations.toastLogEdit('error'));
     },
   });
 };
