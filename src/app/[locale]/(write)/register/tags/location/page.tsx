@@ -34,7 +34,7 @@ const LocationSelectionPage = () => {
         )}
       </div>
 
-      <RegisterFooter tagTargets={['country', 'city', 'sigungu']} nextPath={REGISTER_PATHS.LOG} />
+      <RegisterFooter tagTargets={['country', 'city', 'sigungu']} nextPath={REGISTER_PATHS.MOOD} />
     </>
   );
 };

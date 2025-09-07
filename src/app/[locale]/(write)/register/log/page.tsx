@@ -10,39 +10,20 @@ import { INITIAL_PLACE } from '@/constants/logConstants';
 import { REGISTER_PATHS } from '@/constants/pathname';
 import { useLogForm } from '@/contexts/LogRegisterContext';
 import { usePlacesFieldArray } from '@/hooks/usePlacesFieldArray';
-import { useRouter } from '@/i18n/navigation';
-import { useLogTagStore } from '@/stores/logTagStore';
 import { LogFormValues } from '@/types/log';
 import { scrollToPlaceAfterReorder } from '@/utils/scrollToElement';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
 import { useFieldArray } from 'react-hook-form';
 import { toast } from 'sonner';
 
 const LogPage = () => {
-  const country = useLogTagStore((state) => state.country);
-  const city = useLogTagStore((state) => state.city);
-  const sigungu = useLogTagStore((state) => state.sigungu);
-
   const translations = {
     logPage: useTranslations('Register.LogPage'),
     toastLogCreate: useTranslations('Toast.logCreate'),
     toastPlaceDrawer: useTranslations('Toast.PlaceDrawer'),
   };
 
-  const router = useRouter();
   const { form } = useLogForm();
-
-  // 주소 누락 시, 주소 등록 페이지로 이동
-  useEffect(() => {
-    const isAddressMissing = !country || !city || !sigungu;
-
-    if (isAddressMissing) {
-      toast.error(translations.toastLogCreate('locationMissing'));
-      router.replace(REGISTER_PATHS.LOCATION);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [country, city, sigungu]);
 
   // 장소 필드
   const placesField = useFieldArray<LogFormValues>({
@@ -91,7 +72,7 @@ const LogPage = () => {
         {translations.logPage('deleteWarning')}
       </div>
 
-      <RegisterFooter disabled={!form.formState.isValid} nextPath={REGISTER_PATHS.MOOD} />
+      <RegisterFooter disabled={!form.formState.isValid} nextPath={REGISTER_PATHS.LOCATION} />
     </div>
   );
 };
