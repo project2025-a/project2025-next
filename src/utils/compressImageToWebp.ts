@@ -1,13 +1,13 @@
 /* 이미지 압축 + webp 변환*/
 import imageCompression, { Options } from 'browser-image-compression';
-import heic2any from 'heic2any';
+import { heicTo } from 'heic-to';
 import { returnFileSize } from './returnFileSize';
 
 // heic → jpeg 변환
 export async function convertHeicToJPEG(file: File): Promise<File> {
-  const convertedBlob = await heic2any({
+  const convertedBlob = await heicTo({
     blob: file,
-    toType: 'image/jpeg',
+    type: 'image/jpeg',
     quality: 0.8,
   });
 
@@ -30,6 +30,7 @@ export async function compressImageToWebp(
 
   try {
     // 변환 + 압축
+    console.log('file', file);
     if (file.type === 'image/heic' || file.name.endsWith('.heic')) {
       console.log('원본', returnFileSize(file.size), file.type);
 
