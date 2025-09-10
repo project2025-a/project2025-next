@@ -1,5 +1,5 @@
 'use client';
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
@@ -35,7 +35,6 @@ const PlaceNameField = ({ fieldName }: PlaceNameFieldProps) => {
               )}
             />
           </FormControl>
-          <FormMessage />
         </FormItem>
       )}
     />

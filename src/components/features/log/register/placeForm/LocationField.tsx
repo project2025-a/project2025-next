@@ -1,5 +1,5 @@
 'use client';
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
@@ -40,7 +40,6 @@ const LocationField = ({ fieldName }: LocationFieldProps) => {
               <DaumPostcode onComplete={field.onChange} />
             </div>
           </FormControl>
-          <FormMessage />
         </FormItem>
       )}
     />

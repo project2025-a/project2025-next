@@ -1,5 +1,5 @@
 'use client';
-import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { FormControl, FormField, FormItem } from '@/components/ui/form';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { CATEGORIES } from '@/constants/categoryData';
 import { cn } from '@/lib/utils';
@@ -42,7 +42,6 @@ const CategoryField = ({ fieldName }: CategoryFieldProps) => {
               ))}
             </ToggleGroup>
           </FormControl>
-          <FormMessage />
         </FormItem>
       )}
     />
