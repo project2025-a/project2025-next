@@ -8,7 +8,15 @@ import { PlaceWithoutImages, useLogFormStore } from '@/stores/logFormStore';
 import { useLogTagStore } from '@/stores/logTagStore';
 import { LogCreateValues, LogFormValues } from '@/types/log';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ReactNode, createContext, useCallback, useContext, useEffect, useRef } from 'react';
+import {
+  ReactNode,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import { FieldErrors, UseFormReturn, useForm } from 'react-hook-form';
 
 interface LogFormContextType {
@@ -45,16 +53,14 @@ export const LogFormProvider = ({ children }: { children: ReactNode }) => {
 
   const { mutate: logCreateMutation, isPending: isLogCreatePending } = useLogCreateMutation();
 
+  const initialValues = useMemo(() => {
+    return hydrated && savedValues ? savedValues : { logTitle: '', places: [INITIAL_PLACE] };
+  }, [hydrated, savedValues]);
+
   const form = useForm<LogFormValues>({
     resolver: zodResolver(LogFormSchema),
-    reValidateMode: 'onChange',
-    defaultValues:
-      hydrated && savedValues
-        ? savedValues
-        : {
-            logTitle: '',
-            places: [INITIAL_PLACE],
-          },
+    reValidateMode: 'onSubmit',
+    defaultValues: initialValues,
   });
 
   // Zustand 상태와 form 값을 합쳐서 제출
@@ -73,7 +79,6 @@ export const LogFormProvider = ({ children }: { children: ReactNode }) => {
         },
       };
 
-      // console.log('submission data:', submissionData);
       trackLogCreateEvent('start');
       logCreateMutation(submissionData);
     },
@@ -92,7 +97,8 @@ export const LogFormProvider = ({ children }: { children: ReactNode }) => {
       form.reset(savedValues);
       hasResetRef.current = true;
     }
-  }, [hydrated, savedValues, form]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hydrated]);
 
   useEffect(() => {
     if (!hydrated) return;
