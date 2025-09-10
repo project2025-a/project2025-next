@@ -1,11 +1,11 @@
 'use client';
 import { LogEditHeader } from '@/components/common/Header';
-import PlaceForm from '@/components/features/log/common/PlaceForm';
 import useExistingPlaces from '@/components/features/log/edit/hooks/useExistingPlaces';
 import useLogEditForm from '@/components/features/log/edit/hooks/useLogEditForm';
 import { useNewPlaces } from '@/components/features/log/edit/hooks/useNewPlaces';
 import { getChangeStatus } from '@/components/features/log/edit/utils/utils';
 import ConfirmRegistrationDialog from '@/components/features/log/register/ConfirmRegistrationDialog';
+import PlaceForm from '@/components/features/log/register/placeForm/PlaceForm';
 import MultiTagGroup from '@/components/features/log/register/tags/MultiTagGroup';
 import TitledInput from '@/components/features/log/register/TitledInput';
 import { Form } from '@/components/ui/form';

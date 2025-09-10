@@ -3,7 +3,7 @@
 import AddPlaceButton from '@/components/common/Button/AddPlaceButton';
 import RegisterFooter from '@/components/common/Footer/RegisterFooter';
 import { LogRegisterHeader } from '@/components/common/Header';
-import PlaceForm from '@/components/features/log/common/PlaceForm';
+import PlaceForm from '@/components/features/log/register/placeForm/PlaceForm';
 import TitledInput from '@/components/features/log/register/TitledInput';
 import { Form } from '@/components/ui/form';
 import { INITIAL_PLACE } from '@/constants/logConstants';
