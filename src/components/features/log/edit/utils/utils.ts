@@ -55,6 +55,12 @@ export function extractDirtyValues<T extends FieldValues>(
 
     if (!field) return acc;
 
+    // value가 undefined인 경우 처리
+    if (value === undefined) {
+      acc[key as keyof T] = value;
+      return acc;
+    }
+
     acc[key as keyof T] =
       field === true
         ? value // 해당 필드 전체가 dirty → 값 그대로
