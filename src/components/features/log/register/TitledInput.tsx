@@ -3,12 +3,12 @@ import { FormField } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
-import { useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext, useFormState } from 'react-hook-form';
 
 const TitledInput = () => {
-  const { control, setValue, formState } = useFormContext();
-  const logTitle = useWatch({ control, name: 'logTitle' });
-  const isError = !!formState.errors?.logTitle;
+  const { control, setValue } = useFormContext();
+  const { errors } = useFormState({ control, name: 'logTitle' });
+  const error = errors?.logTitle;
 
   const t = useTranslations('Register.LogPage');
 
@@ -32,7 +32,7 @@ const TitledInput = () => {
                 className={cn(
                   'block w-full px-4 py-6 rounded-[8px] bg-light-50 text-black',
                   'placeholder:text-light-300 !text-[14px] focus:outline-none',
-                  isError && 'placeholder:text-error-500'
+                  error && 'placeholder:text-error-500'
                 )}
                 maxLength={30}
                 required
@@ -41,7 +41,7 @@ const TitledInput = () => {
                 type="button"
                 className={cn(
                   'absolute top-1/2 -translate-y-1/2 right-2 p-2 transition-opacity duration-300',
-                  logTitle ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+                  field.value ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
                 )}
                 onClick={() => setValue('logTitle', '')}
               >

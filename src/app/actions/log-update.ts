@@ -246,7 +246,7 @@ async function deletePlaceImagesFromStorage(
     // console.log('삭제할 이미지들:', deletedImages);
     const deletePromises = deletedImages.map(async (image: { image_path: string }) => {
       const relativePath = image.image_path.replace(/^places\//, ''); // 버킷이름까지 들어있어서 제거
-      console.log('삭제 시도:', relativePath);
+      // console.log('삭제 시도:', relativePath);
       const { error } = await supabase.storage.from('places').remove([relativePath]);
       if (error) {
         console.warn('Storage 이미지 삭제 실패:', relativePath, error);
