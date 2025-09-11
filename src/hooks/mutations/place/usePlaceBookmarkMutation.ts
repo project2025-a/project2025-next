@@ -1,5 +1,6 @@
 import { placeKeys } from '@/app/actions/keys';
 import useUser from '@/hooks/queries/user/useUser';
+import { usePlaceBookmarkStore } from '@/stores/placeBookmarkStore';
 import { BookmarkResponse } from '@/types/api/common';
 import { PlaceBookmarkParams } from '@/types/api/place';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -22,6 +23,8 @@ export default function usePlaceBookmarkMutation(onToggle?: (newStatus: boolean)
   const { data: user } = useUser();
   const queryClient = useQueryClient();
 
+  const onBookmark = usePlaceBookmarkStore((state) => state.onBookmark);
+
   return useMutation({
     mutationFn: (params: PlaceBookmarkParams) => fetchPlaceBookmark({ ...params, locale }),
     onMutate: async ({ placeId, isBookmark }: PlaceBookmarkParams) => {
@@ -43,6 +46,9 @@ export default function usePlaceBookmarkMutation(onToggle?: (newStatus: boolean)
 
       // 상세페이지 카운트 반영
       onToggle?.(!isBookmark);
+
+      // 전역 상태 낙관적 업데이트
+      onBookmark(placeId, isBookmark);
 
       return { previousData };
     },
