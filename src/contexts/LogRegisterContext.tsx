@@ -8,6 +8,7 @@ import { PlaceWithoutImages, useLogFormStore } from '@/stores/logFormStore';
 import { useLogTagStore } from '@/stores/logTagStore';
 import { LogCreateValues, LogFormValues } from '@/types/log';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import {
   ReactNode,
   createContext,
@@ -39,6 +40,9 @@ export const useLogForm = () => {
 };
 
 export const LogFormProvider = ({ children }: { children: ReactNode }) => {
+  const tRegister = useTranslations('Register.CountryPage.options');
+  const tRegion = useTranslations('Region');
+
   const country = useLogTagStore((state) => state.country);
   const city = useLogTagStore((state) => state.city);
   const sigungu = useLogTagStore((state) => state.sigungu);
@@ -73,9 +77,9 @@ export const LogFormProvider = ({ children }: { children: ReactNode }) => {
           activity,
         },
         address: {
-          country,
-          city,
-          sigungu,
+          country: tRegister(country),
+          city: tRegion(city),
+          sigungu: tRegion(sigungu),
         },
       };
 
