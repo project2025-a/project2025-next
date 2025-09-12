@@ -21,12 +21,12 @@ function PostCardLocation({ city, country = '', sigungu, category, modal }: Post
         <span>{t(`Category.${category}`)}</span>
       ) : (
         <>
-          {city && <span>{t(`Region.${city}`)}</span>}
+          {city && <span>{city}</span>}
           <div className="h-3 inline-block align-middle">
             <Separator orientation="vertical" className="h-3 bg-light-300" />
           </div>
-          {country && <span>{t(`CountryType.${country}`)}</span>}
-          {sigungu && <span>{t(`Region.${sigungu}`)}</span>}
+          {country && <span>{country}</span>}
+          {sigungu && <span>{sigungu}</span>}
         </>
       )}
     </h4>
